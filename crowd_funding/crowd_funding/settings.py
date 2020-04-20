@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'authenticate',
 ]
 
 MIDDLEWARE = [
@@ -66,6 +67,9 @@ TEMPLATES = [
         },
     },
 ]
+
+#Registeration
+AUTH_USER_MODEL = 'authenticate.Account'
 
 WSGI_APPLICATION = 'crowd_funding.wsgi.application'
 
