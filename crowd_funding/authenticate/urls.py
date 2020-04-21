@@ -6,6 +6,6 @@ urlpatterns = [
     path('', views.register_page, name="register"),
     path('login/', views.login_page, name="login"),
     path('logout/', views.logout_page, name="logout"),
-    path('home/', views.home_page, name="home")
-
+    path('home/', views.home_page, name="home"),
+    path('<str:token>', views.activate, name="auth.activate"),
 ]
