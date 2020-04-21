@@ -1,6 +1,12 @@
-from django.shortcuts import render, redirect
+from .models import Activation
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import UserRegisterationForm
 from django.contrib.auth import authenticate, login, logout
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils import timezone
+import datetime
+from django.utils.crypto import get_random_string
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
@@ -20,28 +26,25 @@ def register_page(request):
             form = UserRegisterationForm(request.POST)
             if form.is_valid():
                 new_user = form.save(commit=False)
-                new_user.is_active = True
+                new_user.is_active = False
                 new_user.save()
-                user = form.cleaned_data.get('username')
-                messages.success(request, 'Thank you for registering in our website' + user)
-                # token = get_random_string(length=32)
-                # Activation.objects.create(token=token, user=new_user)
+                token = get_random_string(length=32)
+                Activation.objects.create(token=token, user=new_user)
                 # Send Confirmation Email
-                # subject = "Confirm Your Email"
-                # message = f'''
-                #     Thank you for registering in our website,
-                #     please click link below to confirm your email.
-                #     http://localhost:8000/auth/activate/{token}
-                # '''
+                subject = "please, Confirm Your Email to be able to login"
+                message = f'''
+                    Thank you for your registration,
+                    please click this link below to confirm your email.
+                    http://127.0.0.1:8000/{token}
+                '''
+                from_email = settings.EMAIL_HOST_USER
+                to_list = [request.POST['email'], from_email]
+                send_mail(subject, message, from_email, to_list, fail_silently=False)
 
-                # from_email = settings.EMAIL_HOST_USER
-                # to_list = [request.POST['email'], from_email]
-                # send_mail(subject, message, from_email, to_list, fail_silently=True)
-
-                # username = form.cleaned_data.get('username')
-                # messages.success(request,
-                #                  f'Account created for {username}!,Please check your email to activate your account first')
-                return redirect('login')
+                username = form.cleaned_data.get('username')
+                messages.success(request,
+                                 f'Wonderful {username}, account has been created!, kindly check your email address to activate your account')
+                return redirect('home')
         else:
             form = UserRegisterationForm()
         return render(request, 'register.html', {'form': form})
@@ -68,3 +71,16 @@ def login_page(request):
 def logout_page(request):
     logout(request)
     return redirect('login')
+
+def activate(req, token):
+    activation = get_object_or_404(Activation, token=token)
+    is_valid = (timezone.now() - activation.created_at) < datetime.timedelta(hours=24)
+    if is_valid and not activation.is_used:
+        activation.is_used = True
+        activation.save()
+        activation.user.is_active = True
+        activation.user.save()
+        messages.success(req, "Great, your account has been activated ")
+    else:
+        messages.error(req, "Sorry, your activation is not valid OR may be used before,Please try again later")
+    return redirect("login")

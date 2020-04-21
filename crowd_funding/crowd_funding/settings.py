@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'projects',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -70,6 +71,14 @@ TEMPLATES = [
 
 #Registeration
 AUTH_USER_MODEL = 'authenticate.Account'
+
+# sending mail via gmail --- google apps
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'crowdfundinggroupiti@gmail.com'
+EMAIL_HOST_PASSWORD = 'fxitbknkcdefpdta'
+EMAIL_PORT = 587
+
 
 WSGI_APPLICATION = 'crowd_funding.wsgi.application'
 
