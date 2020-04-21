@@ -28,8 +28,6 @@ def register_page(request):
                 new_user = form.save(commit=False)
                 new_user.is_active = False
                 new_user.save()
-                # user = form.cleaned_data.get('username')
-                # messages.success(request, 'Thank you for registering' + user)
                 token = get_random_string(length=32)
                 Activation.objects.create(token=token, user=new_user)
                 # Send Confirmation Email
