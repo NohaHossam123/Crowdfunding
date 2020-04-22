@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Projects</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+
+<body>
+    {% for project in projects %}
+    <h1><a href="{%url 'project' project.id %}">{{project.title}}</a></h1>
+    {% endfor %}
+    <br><br><br><br>
+    <h2><a href="{%url 'new_project'%}">ADD NEW project</a></h2>
+</body>
+
+</html>

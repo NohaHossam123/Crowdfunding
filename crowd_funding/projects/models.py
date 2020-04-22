@@ -26,14 +26,14 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
-class Project_Pictures(models.Model):
+class ProjectPictures(models.Model):
     image_path = models.ImageField(null = True , blank = True)
     project = models.ForeignKey(Project, on_delete = models.CASCADE)
 
     def __str__(self):
         return self.image_path
 
-class Selected_To_Show(models.Model):
+class SelectedToShow(models.Model):
     project = models.ForeignKey(Project, on_delete = models.CASCADE)
 
 class Comment(models.Model):
@@ -49,15 +49,18 @@ class Rate(models.Model):
     body = models.IntegerField(range(1, 5))
     class Meta:
         unique_together = ('user', 'project')
+    def __str__(self):
+        return str(self.body)
 
-class Report_project(models.Model):
+
+class ReportProject(models.Model):
     user = models.ForeignKey(Account, on_delete = models.CASCADE)
     project = models.ForeignKey(Project, on_delete = models.CASCADE)
     body = models.TextField()
     class Meta:
         unique_together = ('user', 'project')
 
-class Report_comment(models.Model):
+class ReportComment(models.Model):
     user = models.ForeignKey(Account, on_delete = models.CASCADE)
     comment = models.ForeignKey(Comment, on_delete = models.CASCADE)
     body = models.TextField()
