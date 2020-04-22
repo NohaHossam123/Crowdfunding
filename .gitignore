@@ -1,3 +1,5 @@
 .idea
 __pycache__
 crowd_funding_venv
+.vscode
+
