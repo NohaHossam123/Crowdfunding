@@ -10,8 +10,8 @@ class Category(models.Model):
 class Project(models.Model):
     title = models.CharField(max_length = 50)
     details = models.TextField()
-    start_date = models.DateTimeField(auto_now = False , auto_now_add = True)
-    end_date = models.DateTimeField()
+    start_date = models.DateTimeField( null = True , blank = True )
+    end_date = models.DateTimeField( null = True , blank = True )
     total_target = models.FloatField()
     category = models.ForeignKey(Category , on_delete = models.CASCADE)
     user = models.ForeignKey(Account, on_delete = models.CASCADE)
