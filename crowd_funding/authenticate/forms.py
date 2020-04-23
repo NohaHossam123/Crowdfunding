@@ -19,7 +19,7 @@ class UserRegisterationForm(UserCreationForm):
 
     class Meta:
         model = Account
-        fields = ['first_name', 'last_name', 'email', 'username', 'password1', 'password2', 'mobile']
+        fields = ['first_name', 'last_name', 'email', 'username', 'password1', 'password2', 'mobile', 'profile_picture']
         labels = {
             'email': 'Email',
             'first_name': 'First Name',

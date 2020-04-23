@@ -72,6 +72,7 @@ def logout_page(request):
     logout(request)
     return redirect('login')
 
+
 def activate(req, token):
     activation = get_object_or_404(Activation, token=token)
     is_valid = (timezone.now() - activation.created_at) < datetime.timedelta(hours=24)
