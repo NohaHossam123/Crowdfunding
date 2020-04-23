@@ -3,8 +3,6 @@ from django.core.validators import RegexValidator
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
-
-
 class CFAccountManager(BaseUserManager):
     def create_user(self, email, username, password=None):
         if not email:

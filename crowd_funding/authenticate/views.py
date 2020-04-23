@@ -9,7 +9,7 @@ import datetime
 from django.utils.crypto import get_random_string
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .decorators import unauthenticated_user, allowed_users, admin_only
+from .decorators import unauthenticated_user
 
 # Create your views here.
 
