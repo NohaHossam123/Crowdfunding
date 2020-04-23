@@ -83,6 +83,7 @@ def activate(req, token):
         messages.error(req, "Sorry, your activation is not valid OR may be used before,Please try again later")
     return redirect("login")
 
+
 @login_required(login_url='login')
 def account_view(request):
     if not request.user.is_authenticated:
@@ -92,12 +93,13 @@ def account_view(request):
         form = AccountUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
+            messages.success(request, "Account has been updated successfully")
     else:
         form = AccountUpdateForm(
-            initial = {
+            initial={
                 'email': request.user.email,
                 'username': request.user.username,
             }
         )
-    context['account_form']= form
-    return render(request,'profile.html',context)
+    context['account_form'] = form
+    return render(request, 'profile.html', context)
