@@ -165,5 +165,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_URL = '/images/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+
 SOCIAL_AUTH_FACEBOOK_KEY = '164179598240061'  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = '26b48812fafd52ad102644c7e518d5bd'  # App Secret

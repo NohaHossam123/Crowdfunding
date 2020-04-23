@@ -50,7 +50,6 @@ class Account(AbstractBaseUser):
     last_name = models.CharField(max_length=30)
     mobile = models.CharField(max_length=11, blank=True)
     profile_picture = models.ImageField()
-    # facebook = models.URLField(max_length=200, null=True)
     # public_info = models.TextField(null=True)
 
     USERNAME_FIELD = 'email'

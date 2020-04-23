@@ -22,7 +22,7 @@ def home_page(request):
 @unauthenticated_user
 def register_page(request):
     if request.method == 'POST':
-        form = UserRegisterationForm(request.POST)
+        form = UserRegisterationForm(request.POST, request.FILES)
         if form.is_valid():
             new_user = form.save(commit=False)
             new_user.is_active = False
