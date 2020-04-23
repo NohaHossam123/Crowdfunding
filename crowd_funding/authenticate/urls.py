@@ -23,6 +23,8 @@ urlpatterns = [
     path('reset_password_complete/',
          auth_views.PasswordResetCompleteView.as_view(template_name="password_reset_done.html"),
          name="password_reset_complete"),
+    # login with facebook
+    path('oauth/', include('social_django.urls', namespace='social')),
     # activation email
     path('<str:token>', views.activate, name="auth.activate"),
 ]
