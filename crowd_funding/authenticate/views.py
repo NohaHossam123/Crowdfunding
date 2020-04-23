@@ -9,6 +9,7 @@ import datetime
 from django.utils.crypto import get_random_string
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from .decorators import unauthenticated_user, allowed_users, admin_only
 
 # Create your views here.
 
@@ -18,54 +19,50 @@ def home_page(request):
     return render(request, 'home.html')
 
 
+@unauthenticated_user
 def register_page(request):
-    if request.user.is_authenticated:
-        return redirect('home')
+    if request.method == 'POST':
+        form = UserRegisterationForm(request.POST)
+        if form.is_valid():
+            new_user = form.save(commit=False)
+            new_user.is_active = False
+            new_user.save()
+            token = get_random_string(length=32)
+            Activation.objects.create(token=token, user=new_user)
+            # Send Confirmation Email
+            subject = "please, Confirm Your Email to be able to login"
+            message = f'''
+                Thank you for your registration,
+                please click this link below to confirm your email.
+                http://127.0.0.1:8000/{token}
+            '''
+            from_email = settings.EMAIL_HOST_USER
+            to_list = [request.POST['email'], from_email]
+            send_mail(subject, message, from_email, to_list, fail_silently=False)
+
+            username = form.cleaned_data.get('username')
+            messages.success(request,
+                             f'Wonderful {username}, account has been created!, kindly check your email address to activate your account')
+            return redirect('home')
     else:
-        if request.method == 'POST':
-            form = UserRegisterationForm(request.POST)
-            if form.is_valid():
-                new_user = form.save(commit=False)
-                new_user.is_active = False
-                new_user.save()
-                token = get_random_string(length=32)
-                Activation.objects.create(token=token, user=new_user)
-                # Send Confirmation Email
-                subject = "please, Confirm Your Email to be able to login"
-                message = f'''
-                    Thank you for your registration,
-                    please click this link below to confirm your email.
-                    http://127.0.0.1:8000/{token}
-                '''
-                from_email = settings.EMAIL_HOST_USER
-                to_list = [request.POST['email'], from_email]
-                send_mail(subject, message, from_email, to_list, fail_silently=False)
-
-                username = form.cleaned_data.get('username')
-                messages.success(request,
-                                 f'Wonderful {username}, account has been created!, kindly check your email address to activate your account')
-                return redirect('home')
-        else:
-            form = UserRegisterationForm()
-        return render(request, 'register.html', {'form': form})
+        form = UserRegisterationForm()
+    return render(request, 'register.html', {'form': form})
 
 
+@unauthenticated_user
 def login_page(request):
-    if request.user.is_authenticated:
-        return redirect('home')
-    else:
-        if request.method == 'POST':
-            email = request.POST.get('email')
-            password = request.POST.get('password')
-            user = authenticate(request, email=email, password=password)
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        user = authenticate(request, email=email, password=password)
 
-            if user is not None:
-                login(request, user)
-                return redirect('home')
-            else:
-                messages.info(request, 'email OR password is incorrect')
-        context = {}
-        return render(request, 'login.html', context)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.info(request, 'email OR password is incorrect')
+    context = {}
+    return render(request, 'login.html', context)
 
 
 def logout_page(request):
