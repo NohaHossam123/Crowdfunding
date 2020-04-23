@@ -8,6 +8,7 @@
 <body>
 <h1>Home Page</h1>
 <h1>Hello, {{request.user.username}}</h1>
+<a href="{% url 'profile' %}" class = "btn btn-success">My profile</a>
 <a href="{% url 'logout' %}" class="btn btn-danger">logout</a>
 </body>
 </html>

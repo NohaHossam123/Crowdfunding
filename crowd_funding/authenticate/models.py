@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, User
 
 
 
@@ -78,5 +78,4 @@ class Activation(models.Model):
 
     def __str__(self):
         return f'{self.user}'
-
 
