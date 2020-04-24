@@ -88,7 +88,7 @@ def activate(req, token):
 def account_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    context = {}
+    # context = {}
     if request.POST:
         form = AccountUpdateForm(request.POST, instance=request.user)
         if form.is_valid():
@@ -99,8 +99,15 @@ def account_view(request):
             initial={
                 'email': request.user.email,
                 'username': request.user.username,
-                'profile_picture': request.user.profile_picture
+                'profile_picture': request.user.profile_picture,
+                'first_name' : request.user.first_name,
+                'last_name' : request.user.last_name,
+                'mobile' : request.user.mobile,
+                'password' : request.user.password,
+                'birthdate' : request.user.birthdate,
+                'country' : request.user.country,
+                'facebook_profile' : request.user.facebook_profile,
             }
         )
-    context['account_form'] = form
-    return render(request, 'profile.html', context)
+    # context['account_form'] = form
+    return render(request, 'profile.html', {'form': form})
