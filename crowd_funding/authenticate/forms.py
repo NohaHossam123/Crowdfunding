@@ -29,10 +29,10 @@ class UserRegisterationForm(UserCreationForm):
 
 
 class AccountUpdateForm(forms.ModelForm):
-
+    password = forms.CharField(label = "password", widget=forms.PasswordInput)
     class Meta:
         model = Account
-        fields = ('email', 'username', 'profile_picture')
+        fields = ('email', 'username', 'profile_picture','first_name','last_name','mobile','password','birthdate','country','facebook_profile')
 
     def clean_email(self):
         if self.is_valid():
@@ -51,3 +51,30 @@ class AccountUpdateForm(forms.ModelForm):
             except Account.DoesNotExist:
                 return username
             raise forms.ValidationError('username "%s" is already in use' % account.username)
+    
+    def clean_firstname(self):
+        if self.is_valid():
+            first_name = self.cleaned_data['first_name']
+            try:
+                account = Account.objects.exclude(pk=self.instance.pk).get(first_name=first_name)
+            except Account.DoesNotExist:
+                return first_name
+            raise forms.ValidationError('first name "%s" is already in use' % account.first_name)
+
+    def clean_lastname(self):
+        if self.is_valid():
+            last_name = self.cleaned_data['last_name']
+            try:
+                account = Account.objects.exclude(pk=self.instance.pk).get(last_name=last_name)
+            except Account.DoesNotExist:
+                return last_name
+            raise forms.ValidationError('last name "%s" is already in use' % account.last_name)
+
+    def clean_mobile(self):
+        if self.is_valid():
+            mobile = self.cleaned_data['mobile']
+            try:
+                account = Account.objects.exclude(pk=self.instance.pk).get(mobile=mobile)
+            except Account.DoesNotExist:
+                return mobile
+            raise forms.ValidationError('mobile "%s" is already in use' % account.mobile)
