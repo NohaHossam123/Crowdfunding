@@ -19,7 +19,11 @@
 
 
       <div class="text-center">
-        <img src="{{ request.user.profile_picture.url }}" class="avatar img-circle img-thumbnail" alt="avatar" style="height: 250px">
+          {% if request.user.profile_picture %}
+              <img src="{{ request.user.profile_picture.url }}" class="avatar img-circle img-thumbnail" alt="avatar" style="height: 250px">
+          {% else %}
+              <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar" style="height: 250px">
+          {% endif %}
         <h6>Upload a different photo...</h6>
         <input type="file" class="text-center center-block file-upload">
       </div></hr><br>
@@ -37,6 +41,7 @@
             <div class="tab-pane active" id="home">
                 <hr>
                   <form class="form" action="##" method="post" id="registrationForm">
+                      {% csrf_token %}
                       <div class="form-group">
 
                           <div class="col-xs-6">
