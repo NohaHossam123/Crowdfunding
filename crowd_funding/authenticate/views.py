@@ -99,6 +99,7 @@ def account_view(request):
             initial={
                 'email': request.user.email,
                 'username': request.user.username,
+                'profile_picture': request.user.profile_picture
             }
         )
     context['account_form'] = form

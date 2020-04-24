@@ -29,9 +29,10 @@ class UserRegisterationForm(UserCreationForm):
 
 
 class AccountUpdateForm(forms.ModelForm):
+
     class Meta:
         model = Account
-        fields = ('email','username')
+        fields = ('email', 'username', 'profile_picture')
 
     def clean_email(self):
         if self.is_valid():
@@ -49,4 +50,4 @@ class AccountUpdateForm(forms.ModelForm):
                 account = Account.objects.exclude(pk=self.instance.pk).get(username=username)
             except Account.DoesNotExist:
                 return username
-            raise forms.ValidationError('username "%s" is already in use' % account.username) 
+            raise forms.ValidationError('username "%s" is already in use' % account.username)
