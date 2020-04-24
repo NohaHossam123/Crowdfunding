@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import redirect
 from .models import *
 # Create your views here.
 
@@ -15,6 +16,10 @@ def addproject(request):
 
 def project(request, id):
     project = Project.objects.get(id=id)
+    donates = project.donate_set.only("amount")
+    total_donate = 0
+    for d in donates:
+        total_donate += float(str(d))
     rate = project.rate_set.only("body")
     average = 0
     for r in rate:
@@ -23,5 +28,29 @@ def project(request, id):
     imgs = project.projectpictures_set.only("image_path")
     for r in imgs:
         print (r.image_path)
-    context = {"project": project, "totalRate": average,"imgs":imgs}
+    report = report.objects.get(Project=project,User=request.user)
+    context = {"project": project, "totalRate": average, "totalDonate": total_donate, "imgs": imgs,"report":report}
     return render(request, "project.html", context)
+
+def adddonate(request, id):
+    if request.method.lower()=="post":
+        newdonate=Donate()
+        newdonate.amount=request.POST['amount']
+        newdonate.project=Project.objects.get(id=id)
+        newdonate.user=request.user
+        newdonate.save()
+        return redirect(f'/project/{id}')
+
+def addreport(request, id):
+    if request.method.lower()=="post":
+        if(ReportProject.objects.get(user=request.user)):
+            updateReport=ReportProject.objects.get(user=request.user)
+            updateReport.body=request.POST['body']
+            updateReport.save()
+            return redirect(f'/project/{id}')
+        newReport=ReportProject()
+        newReport.body=request.POST['body']
+        newReport.project=Project.objects.get(id=id)
+        newReport.user=request.user
+        newReport.save()
+        return redirect(f'/project/{id}')

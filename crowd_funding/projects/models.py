@@ -15,7 +15,7 @@ class Project(models.Model):
     total_target = models.FloatField()
     category = models.ForeignKey(Category , on_delete = models.CASCADE)
     user = models.ForeignKey(Account, on_delete = models.CASCADE)
-    donate = models.ManyToManyField(Account,related_name='user' )
+    # donate = models.ManyToManyField(Account,related_name='user' )
     def __str__(self):
         return self.title
 
@@ -51,6 +51,13 @@ class Rate(models.Model):
         unique_together = ('user', 'project')
     def __str__(self):
         return str(self.body)
+
+class Donate(models.Model):
+    user = models.ForeignKey(Account, on_delete = models.CASCADE)
+    project = models.ForeignKey(Project, on_delete = models.CASCADE)
+    amount = models.FloatField()
+    def __str__(self):
+        return str(self.amount)
 
 
 class ReportProject(models.Model):
