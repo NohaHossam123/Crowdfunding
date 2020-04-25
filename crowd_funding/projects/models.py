@@ -35,22 +35,36 @@ class ProjectPictures(models.Model):
 
 class SelectedToShow(models.Model):
     project = models.ForeignKey(Project, on_delete = models.CASCADE)
+    def __str__(self):
+        return self.project.title
 
 class Comment(models.Model):
     user = models.ForeignKey(Account, on_delete = models.CASCADE)
     project = models.ForeignKey(Project, on_delete = models.CASCADE)
     body = models.TextField()
-    class Meta:
-        unique_together = ('user', 'project')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return self.user.first_name+" "+self.user.last_name
+
+class Reply(models.Model):
+    user = models.ForeignKey(Account, on_delete = models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete = models.CASCADE)
+    body = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return self.user.first_name+" "+self.user.last_name
     
 class Rate(models.Model):
     user = models.ForeignKey(Account, on_delete = models.CASCADE)
     project = models.ForeignKey(Project, on_delete = models.CASCADE)
-    body = models.IntegerField(range(1, 5))
+    body = models.IntegerField(range(0, 5))
     class Meta:
         unique_together = ('user', 'project')
     def __str__(self):
         return str(self.body)
+
 
 class Donate(models.Model):
     user = models.ForeignKey(Account, on_delete = models.CASCADE)

@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from .models import *
+from django.contrib.auth.decorators import login_required
+from authenticate.decorators import unauthenticated_user
 # Create your views here.
 
 
@@ -24,17 +26,28 @@ def project(request, id):
     average = 0
     for r in rate:
         average += int(str(r))
-    average = average / len(rate)
+    if len(rate) != 0:
+        average = average / len(rate)
+    else:
+        average = 0
     imgs = project.projectpictures_set.only("image_path")
     for r in imgs:
         print (r.image_path)
+    if not request.user.is_authenticated or Rate.objects.filter(user_id=request.user) is None:
+        user_rate = 0
+    else:
+        user_rate =  project.rate_set.get(user_id=request.user.id).body
     
-    try:
+    if not request.user.is_authenticated or ReportProject.objects.filter(user_id=request.user) is None:
+        report = ''
+    else:
         report = ReportProject.objects.get(project=project, user=request.user)
-    except ReportProject.DoesNotExist:
-        report = ""
+   
     context = {"project": project, "totalRate": average,
-               "totalDonate": total_donate, "imgs": imgs, "report": report}
+               "totalDonate": total_donate, 
+               "imgs": imgs, "report": report,
+               "user_rate": user_rate
+               }
     return render(request, "project.html", context)
 
 
@@ -61,3 +74,73 @@ def addreport(request, id):
             newReport.user = request.user
             newReport.save()
     return redirect(f'/project/{id}')
+
+
+@login_required(login_url='login')
+def add_comment(request,id):
+    if request.method == 'POST':
+        user_id = request.user.id
+        body = request.POST.get('body')
+        Comment.objects.create(body=body,user_id=user_id, project_id=id)
+    return redirect('project' , id)
+
+@login_required(login_url='login')
+def edit_comment(request, id):
+    if request.method == 'POST':
+        comment = Comment.objects.get(id=id)
+        comment.body = request.POST.get('body')
+        project_id = comment.project_id
+        comment.save()
+    return redirect('project', project_id)
+
+@login_required(login_url='login')
+def add_reply(request,id,c_id):
+    if request.method == 'POST':
+        user_id = request.user.id
+        body = request.POST.get('body')
+        Reply.objects.create(body=body,user_id=user_id,comment_id=c_id)
+    return redirect('project' , id)
+
+@login_required(login_url='login')
+def delete_comment(request, id):
+    comment = Comment.objects.get(id=id)
+    project_id = comment.project_id
+    comment.delete()
+    return redirect('project', project_id)
+
+
+@login_required(login_url='login')
+def report_comment(request, id):
+    try:
+        if request.method == 'POST':
+            user_id = request.user.id
+            comment = Comment.objects.get(id=id)
+            project_id = comment.project_id
+            body = request.POST.get('body')
+            ReportComment.objects.create(user_id=user_id,comment_id=id, body=body)
+    except:
+        pass
+
+    return redirect('project', project_id)
+
+
+@login_required(login_url='login')
+def delete_reply(request, id, p_id):
+    Reply.objects.get(id=id).delete()
+    return redirect('project', p_id)
+
+@login_required(login_url='login')
+def rate_project(request, id):
+    try:
+        if request.method == 'POST':
+            user_id = request.user.id
+            rate = int(request.POST.get('rating'))
+            Rate.objects.create(user_id=user_id, project_id=id, body=rate)
+    except:
+        rate = Rate.objects.get(user_id= request.user.id)
+        rate.body = int(request.POST.get('rating')) 
+        rate.save()
+    return redirect('project',id)
+
+    
+
