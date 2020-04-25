@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,16 +10,18 @@
     <title>project</title>
 </head>
 <body>
+{% load mathfilters %}
 {{project.title}}
 {{totalRate}}
 <br>
 {{totalDonate}}/{{project.total_target}}
+{%if totalDonate <= project.total_target %}
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#donate" data-whatever="@fat">donate</button>
-{%widthratio project.total_target 2 1 as cancelLock%}
-{%widthratio totalDonate 1 1 as total%}
-{%if total < cancelLock %}
+{% endif %}
+{%if totalDonate <= project.total_target|div:2 %}
   <button type="button" class="btn btn-danger">cancel</button>       
 {% endif %}
+
 
 
 <br>
