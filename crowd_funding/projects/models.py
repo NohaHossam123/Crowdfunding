@@ -66,6 +66,9 @@ class ReportProject(models.Model):
     body = models.TextField()
     class Meta:
         unique_together = ('user', 'project')
+    def __str__(self):
+        return str(self.body)
+
 
 class ReportComment(models.Model):
     user = models.ForeignKey(Account, on_delete = models.CASCADE)

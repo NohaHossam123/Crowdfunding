@@ -28,7 +28,7 @@ def project(request, id):
     imgs = project.projectpictures_set.only("image_path")
     for r in imgs:
         print (r.image_path)
-    report = report.objects.get(Project=project,User=request.user)
+    report = ReportProject.objects.get(project=project,user=request.user)
     context = {"project": project, "totalRate": average, "totalDonate": total_donate, "imgs": imgs,"report":report}
     return render(request, "project.html", context)
 

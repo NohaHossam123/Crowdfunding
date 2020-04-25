@@ -69,7 +69,7 @@
           <div class="form-group">
             {% csrf_token %}
             <label for="message-text" class="col-form-label">report:</label>
-            <textarea class="form-control" id="message-text" name="body"></textarea>
+            <textarea class="form-control" id="message-text" name="body">{{report}}</textarea>
           </div>
         </div>
         <div class="modal-footer">
