@@ -14,7 +14,12 @@
 <br>
 {{totalDonate}}/{{project.total_target}}
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#donate" data-whatever="@fat">donate</button>
-<button type="button" class="btn btn-danger">cancel</button>
+{%widthratio project.total_target 2 1 as cancelLock%}
+{%widthratio totalDonate 1 1 as total%}
+{%if total < cancelLock %}
+  <button type="button" class="btn btn-danger">cancel</button>       
+{% endif %}
+
 
 <br>
 <div class="container">
@@ -95,7 +100,7 @@
             <div class="form-group">
               {% csrf_token %}
               <label for="message-text" class="col-form-label">donate amount:</label>
-              <input type="number" class="form-control" id="message-text" name="amount"></textarea>
+              <input type="number" step="0.01" class="form-control" id="message-text" name="amount"></textarea>
             </div>
           </div>
           <div class="modal-footer">
