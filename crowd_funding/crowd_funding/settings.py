@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'projects',
     'social_django',  # <-- Here social-auth-app-django
     'mathfilters',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [
