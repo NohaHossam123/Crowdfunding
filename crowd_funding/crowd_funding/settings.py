@@ -62,7 +62,7 @@ ROOT_URLCONF = 'crowd_funding.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'projects/tamplates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,7 +121,11 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'crowdfunding',
         'USER': 'root',
+<<<<<<< HEAD
         'PASSWORD': '',
+=======
+        'PASSWORD': 'rootroot',
+>>>>>>> 45491812fdc9d2aef223d2b73bcf1c48a688458c
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -167,6 +171,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 MEDIA_URL = '/images/'
+MEDIA_ROOT= os.path.join(BASE_DIR,'images')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
