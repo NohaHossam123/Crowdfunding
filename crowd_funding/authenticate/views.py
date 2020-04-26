@@ -1,6 +1,6 @@
 from .models import Activation
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import UserRegisterationForm, AccountUpdateForm
+from .forms import UserRegisterationForm, AccountUpdateForm, HighestRate
 from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
 from django.conf import settings
@@ -10,13 +10,26 @@ from django.utils.crypto import get_random_string
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user
-
+from django.db.models import Q
+from projects.models import *
 # Create your views here.
 
 
 @login_required(login_url='login')
 def home_page(request):
-    return render(request, 'home.html')
+    # end = Project.objects.filter(end_date=end_date)
+    # now = timezone.now()
+    # query = end < now
+    latest_projects = Project.objects.order_by("-id")[:5]
+    # if query:
+    heigest_rate_projects = Rate.objects.order_by("-body")[:5]
+    category_result = Category.objects.all()
+    context = {
+        "latest_projects":latest_projects,
+        "heighest_rate_projects": heigest_rate_projects,
+        "category_result":category_result
+    }
+    return render(request, 'home.html', context)
 
 
 @unauthenticated_user
@@ -111,3 +124,22 @@ def account_view(request):
         )
     # context['account_form'] = form
     return render(request, 'profile.html', {'form': form})
+
+def projects_view(request , id):
+    projects = Project.objects.filter(category_id = id)
+    list_projects = {"projects":projects}
+    return render(request,"show_projects.html",list_projects)
+
+def search(request):
+    query = request.GET.get('q')
+    if query:
+        title_results = Project.objects.filter(Q(title__icontains=query))
+        tag_results = Tag.objects.filter(Q(name__icontains=query))
+        context={
+            "title_results":title_results,
+            "tag_results":tag_results
+        }
+    else:
+        messages = messages.error(request,'no result found')
+        context = {"messages":messages}
+    return render(request,'home.html', context)

@@ -3,6 +3,7 @@ from django.core.validators import RegexValidator
 
 from .models import Account
 from django.contrib.auth.forms import UserCreationForm
+from projects.models import *
 
 
 class UserRegisterationForm(UserCreationForm):
@@ -78,3 +79,7 @@ class AccountUpdateForm(forms.ModelForm):
             except Account.DoesNotExist:
                 return mobile
             raise forms.ValidationError('mobile "%s" is already in use' % account.mobile)
+class HighestRate(forms.ModelForm):
+    class Meta:
+        model=Project
+        fields = ["end_date"]
