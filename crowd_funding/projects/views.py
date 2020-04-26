@@ -1,9 +1,40 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from .models import *
+from .forms import ProjectForm
 from django.contrib.auth.decorators import login_required
 from authenticate.decorators import unauthenticated_user
 # Create your views here.
+
+
+# create Form
+
+def project_create_view(request):
+    form = ProjectForm(request.POST or None, request.FILES, initial = {'category_name': Category.objects.all()})
+    print(request.FILES.getlist('cover_images')[0])
+    if form.is_valid():
+        project = form.save(commit=False)
+        project.user = request.user
+        project.save()
+    
+    context = {
+        'form': form
+    }
+
+    return render(request, "project_create.html",context)
+
+
+# if request.method.lower()=="get":
+# book_form = AddBookForm()
+# return render(request, "newbook.html", {"form": book_form})
+# elif request.method.lower()=="post":
+# form = AddBookForm(request.POST, request.FILES)
+# if form.is_valid():
+# form.save()
+# return redirect('/')
+# else:
+# return render(request, "newbook.html", {"form": book_form}) 
+
 
 
 def listprojects(request):
