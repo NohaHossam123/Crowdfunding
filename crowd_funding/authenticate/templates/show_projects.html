@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <title>Projects</title>
+</head>
+<body>
+  <h1>All projects in {{ project.category.name }} category</h1>
+    <div class="row">
+        {% for project in projects %}
+          <div class="card">
+            <h5><span>Title: </span>{{ project.title }} </h5>
+            <h5><span>Details: </span>{{ project.details }} </h5>
+            <h5><span>Start date: </span>{{ project.start_date }} </h5>
+            <h5><span>End date: </span>{{ project.end_date }} </h5>
+            <h5><span>Total target: </span>{{ project.total_target }}</h5>
+          </div>
+        {% empty %}
+        <div class="emptyCategory">
+            <h4> No projects found for this category</h4>
+        </div>
+    </div>
+        {% endfor %}
+      </div> 
+</body>
+</html>
