@@ -10,7 +10,10 @@ from authenticate.decorators import unauthenticated_user
 # create Form
 
 def project_create_view(request):
+    # form_class = FileFieldForm
+    # template_name = 'project_create.html'  # Replace with your template.
     form = ProjectForm(request.POST or None, initial = {'category_name': Category.objects.all()})
+    print(request.FILES.getlist('images'))
     if form.is_valid():
         project = form.save(commit=False)
         project.user = request.user
@@ -19,6 +22,14 @@ def project_create_view(request):
     context = {
         'form': form
     }
+
+    #get files from req
+    for file in request.FILES.getlist('images'):
+                instance = ProjectPictures(
+                    project=project,
+                    image_path=file
+                )
+                instance.save()
 
     return render(request, "project_create.html",context)
 

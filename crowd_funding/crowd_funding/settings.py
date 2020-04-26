@@ -62,7 +62,7 @@ ROOT_URLCONF = 'crowd_funding.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'projects/tamplates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -167,6 +167,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 MEDIA_URL = '/images/'
+MEDIA_ROOT= os.path.join(BASE_DIR,'images')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
