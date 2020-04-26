@@ -10,8 +10,7 @@ from authenticate.decorators import unauthenticated_user
 # create Form
 
 def project_create_view(request):
-    form = ProjectForm(request.POST or None, request.FILES, initial = {'category_name': Category.objects.all()})
-    print(request.FILES.getlist('cover_images')[0])
+    form = ProjectForm(request.POST or None, initial = {'category_name': Category.objects.all()})
     if form.is_valid():
         project = form.save(commit=False)
         project.user = request.user
