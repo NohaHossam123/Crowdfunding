@@ -3,6 +3,7 @@ from django.core.validators import RegexValidator
 
 from .models import Account
 from django.contrib.auth.forms import UserCreationForm
+from projects.models import *
 
 
 class UserRegisterationForm(UserCreationForm):

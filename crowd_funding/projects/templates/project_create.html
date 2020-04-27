@@ -1,0 +1,62 @@
+
+<title>New Project</title>
+
+{% block style_block %}
+<!-- Test Tags input -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>	
+
+{% endblock %}
+
+
+{% block content %}
+{% load widget_tweaks %}
+<div class="container">
+  <div class="col-md-6">
+  <form enctype="multipart/form-data" action="{% url 'create_project' %}" method="post" class=""> {% csrf_token %}
+  <!-- {{ form.as_p }} -->
+  {% for field in form %}
+  <div class="form-group">
+    {{ field.label_tag }}
+    {% if field.label == "Tags" %}
+      {% for o in field %}
+      <div class="custom-control custom-checkbox mb-3">
+        {{ field.field }}
+        <input type="checkbox" name="tags" value="{{o.data.value}}" class="custom-control-input" id="{{ o.data.attrs.id }}" > 
+        <label class="custom-control-label" for="{{ o.data.attrs.id }}" >{{o.data.label}}</label> 
+        <br>
+      </div>
+      {% endfor %}
+
+    {% else %}
+    {% render_field field class="form-control" %}
+    {% endif %}
+    {{ field.errors }}
+  </div>
+{% endfor %}
+
+  <div class="form-group">
+    <label>Porject Images:</label>
+    <div class="file-upload">
+
+      <div class="file-select">
+        <input type="file" name="images" accept="image/png, image/jpeg" id="img2" multiple>
+      </div>
+      </div>
+  </div>
+    <div class="form-group">
+      <label>Tags: </label>
+      <br>
+      <input type="text" value="" data-role="tagsinput" name="tags" style=></input>
+    </div>
+
+  <input type="submit" value="add"  class="btn btn-info pu-6"/>
+  <input type="button" value="Reset" class="btn btn-info pu-6" onClick="this.form.reset()" />
+
+  </form>
+</div>
+</div>
+
+{% endblock %}

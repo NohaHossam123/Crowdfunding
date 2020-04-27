@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'authenticate',
     'projects',
     'social_django',  # <-- Here social-auth-app-django
+    'mathfilters',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [
@@ -61,7 +63,7 @@ ROOT_URLCONF = 'crowd_funding.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'projects/tamplates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -120,7 +122,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'crowdfunding',
         'USER': 'root',
-        'PASSWORD': 'R12!dff2svF0',
+        'PASSWORD': 'rootroot',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -166,6 +168,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 MEDIA_URL = '/images/'
+MEDIA_ROOT= os.path.join(BASE_DIR,'images')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
