@@ -101,29 +101,49 @@ def activate(req, token):
 def account_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    # context = {}
-    if request.POST:
-        form = AccountUpdateForm(request.POST, instance=request.user)
+    context = {}
+    
+    if request.method == 'POST':
+        form = AccountUpdateForm(request.POST,request.FILES, instance=request.user)
         if form.is_valid():
+            print(request.FILES)
+            form.initial = {
+            "first_name": request.POST['first_name'],
+            "last_name": request.POST['last_name'],
+            "email": request.POST['email'],
+            "profile_picture": request.POST['profile_picture'],
+            "username": request.POST['username'],
+            "mobile": request.POST['mobile'],
+            "birthdate": request.POST.get('birthdate'),
+            "country": request.POST['country'],
+            "facebook_profile": request.POST['facebook_profile'],
+
+            }
             form.save()
             messages.success(request, "Account has been updated successfully")
     else:
         form = AccountUpdateForm(
             initial={
-                'email': request.user.email,
-                'username': request.user.username,
-                'profile_picture': request.user.profile_picture,
-                'first_name' : request.user.first_name,
-                'last_name' : request.user.last_name,
-                'mobile' : request.user.mobile,
-                'password' : request.user.password,
-                'birthdate' : request.user.birthdate,
-                'country' : request.user.country,
-                'facebook_profile' : request.user.facebook_profile,
+                "email": request.user.email,
+                "username": request.user.username,
+                "profile_picture": request.user.profile_picture,
+                "first_name": request.user.first_name,
+                "last_name": request.user.last_name,
+                "mobile": request.user.mobile,
+                "birthdate": request.user.birthdate,
+                "country": request.user.country,
+                "facebook_profile": request.user.facebook_profile,
             }
         )
-    # context['account_form'] = form
-    return render(request, 'profile.html', {'form': form})
+    context['account_form'] = form
+    return render(request, 'profile.html', context)
+
+def delete_profile(request):
+    if request.method == 'GET':
+        request.user.delete()
+    return redirect('login')
+    
+    
 
 def projects_view(request , id):
     projects = Project.objects.filter(category_id = id)

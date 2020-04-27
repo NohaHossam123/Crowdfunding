@@ -12,6 +12,7 @@ urlpatterns = [
     path('show_projects/<id>', views.projects_view, name="show_projects"),
     path('search/', views.search, name="search"),
     path('profile/', views.account_view, name="profile"),
+    path('delete/', views.delete_profile, name="delete"),
     # password reset
     path('reset_password/',
          auth_views.PasswordResetView.as_view(template_name="password_reset.html"),
