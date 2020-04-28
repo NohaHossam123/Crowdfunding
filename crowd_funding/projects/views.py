@@ -4,6 +4,8 @@ from .models import *
 from .forms import ProjectForm
 from django.contrib.auth.decorators import login_required
 from authenticate.decorators import unauthenticated_user
+from django.contrib import messages
+
 # Create your views here.
 
 
@@ -52,11 +54,6 @@ def listprojects(request):
     context = {"projects": projects}
     return render(request, "allprojects.html", context)
 
-
-def addproject(request):
-    pass
-
-
 def project(request, id):
     project = Project.objects.get(id=id)
     donates = project.donate_set.only("amount")
@@ -65,26 +62,27 @@ def project(request, id):
         total_donate += float(str(d))
     rate = project.rate_set.only("body")
     average = 0
+    totalRate=0
     for r in rate:
         average += int(str(r))
     if len(rate) != 0:
         average = average / len(rate)
+        totalRate=round(average)
     else:
         average = 0
     imgs = project.projectpictures_set.only("image_path")
     for r in imgs:
         print (r.image_path)
-    if not request.user.is_authenticated or Rate.objects.filter(user_id=request.user) is None:
+    try:
+        user_rate = project.rate_set.get(user_id=request.user.id).body
+    except:
         user_rate = 0
-    else:
-        user_rate =  project.rate_set.get(user_id=request.user.id).body
-    
-    if not request.user.is_authenticated or ReportProject.objects.filter(user_id=request.user) is None:
-        report = ''
-    else:
+    try:
         report = ReportProject.objects.get(project=project, user=request.user)
+    except:
+        report=""
    
-    context = {"project": project, "totalRate": average,
+    context = {"project": project, "totalRate": totalRate   ,
                "totalDonate": total_donate, 
                "imgs": imgs, "report": report,
                "user_rate": user_rate
@@ -120,10 +118,15 @@ def addreport(request, id):
 @login_required(login_url='login')
 def add_comment(request,id):
     if request.method == 'POST':
-        user_id = request.user.id
-        body = request.POST.get('body')
-        Comment.objects.create(body=body,user_id=user_id, project_id=id)
+        if  request.POST.get('body') == '':
+            messages.error(request, "Comment cannot be empty, Try again!")
+        else:  
+            user_id = request.user.id
+            body = request.POST.get('body')
+            Comment.objects.create(body=body,user_id=user_id, project_id=id)
     return redirect('project' , id)
+
+
 
 @login_required(login_url='login')
 def edit_comment(request, id):
@@ -131,16 +134,24 @@ def edit_comment(request, id):
         comment = Comment.objects.get(id=id)
         comment.body = request.POST.get('body')
         project_id = comment.project_id
-        comment.save()
+        if comment.body == '':
+            messages.error(request, "Comment cannot be empty, Try again!")
+        else:  
+            comment.save()
     return redirect('project', project_id)
+
 
 @login_required(login_url='login')
 def add_reply(request,id,c_id):
     if request.method == 'POST':
-        user_id = request.user.id
-        body = request.POST.get('body')
-        Reply.objects.create(body=body,user_id=user_id,comment_id=c_id)
+        if request.POST.get('body') == '':
+            messages.error(request, "Reply cannot be empty, Try again!")
+        else:    
+            user_id = request.user.id
+            body = request.POST.get('body')
+            Reply.objects.create(body=body,user_id=user_id,comment_id=c_id)
     return redirect('project' , id)
+
 
 @login_required(login_url='login')
 def delete_comment(request, id):
@@ -148,6 +159,7 @@ def delete_comment(request, id):
     project_id = comment.project_id
     comment.delete()
     return redirect('project', project_id)
+
 
 
 @login_required(login_url='login')
@@ -158,11 +170,14 @@ def report_comment(request, id):
             comment = Comment.objects.get(id=id)
             project_id = comment.project_id
             body = request.POST.get('body')
-            ReportComment.objects.create(user_id=user_id,comment_id=id, body=body)
+            if body == '':
+                messages.error(request, "Report cannot be empty, Try again!")
+            else:    
+                ReportComment.objects.create(user_id=user_id,comment_id=id, body=body)
     except:
-        pass
-
+        messages.error(request, "You reported this comment before!")
     return redirect('project', project_id)
+
 
 
 @login_required(login_url='login')
@@ -181,7 +196,4 @@ def rate_project(request, id):
         rate = Rate.objects.get(user_id= request.user.id)
         rate.body = int(request.POST.get('rating')) 
         rate.save()
-    return redirect('project',id)
-
-    
-
+    return redirect('project', id)

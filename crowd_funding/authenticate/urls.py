@@ -5,10 +5,10 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     # authentication
-    path('', views.register_page, name="register"),
+    path('register/', views.register_page, name="register"),
     path('login/', views.login_page, name="login"),
     path('logout/', views.logout_page, name="logout"),
-    path('home/', views.home_page, name="home"),
+    path('', views.home_page, name="home"),
     path('show_projects/<id>', views.projects_view, name="show_projects"),
     path('search/', views.search, name="search"),
     path('profile/', views.account_view, name="profile"),
