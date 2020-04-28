@@ -62,11 +62,11 @@ def project(request, id):
         total_donate += float(str(d))
     rate = project.rate_set.only("body")
     average = 0
+    totalRate=0
     for r in rate:
         average += int(str(r))
     if len(rate) != 0:
         average = average / len(rate)
-        totalRate=0
         totalRate=round(average)
     else:
         average = 0

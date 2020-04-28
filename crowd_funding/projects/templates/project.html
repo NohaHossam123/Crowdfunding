@@ -13,6 +13,15 @@
 {% load mathfilters %}
 {{project.title}}
 {{totalRate}}
+<div class="star-rating">
+            {% for i in '54321'%}
+            {% if i|add:0 <= totalRate %}
+             <span class="active fa fa-star star-color"></span>
+            {%else%}
+              <span class="fa fa-star"></span>
+            {% endif %}
+            {% endfor%}
+    </div>
 <br>
 {{totalDonate}}/{{project.total_target}}
 {%if totalDonate <= project.total_target %}
@@ -34,7 +43,7 @@
             {% else %}
                 <div class="carousel-item">
             {% endif %}
-                <img height="400" width="300" class="d-block w-100 " src="{{img.image_path}}" alt="project">
+                <img height="400" width="300" class="d-block w-100 " src="/static/images/{{img.image_path}}" alt="project">
             </div>
         {% endfor %}
     </div>
