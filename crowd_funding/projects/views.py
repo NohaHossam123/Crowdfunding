@@ -17,6 +17,7 @@ def project_create_view(request):
         project = form.save(commit=False)
         project.user = request.user
         project.save()
+        print("inserted")
     
     context = {
         'form': form
