@@ -13,6 +13,17 @@
     <title>project</title>
 </head>
 <body>
+
+  {% if messages %}
+  <div class="alert alert-danger">
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
 {% load mathfilters %}
 {{project.title}}
 {{totalRate}}
@@ -94,7 +105,7 @@
           <button type="button" class="btn btn-link" data-toggle="modal" data-target="#exampleModal" data-action="{% url 'report_comment' comment.id %}"
           data-message="" data-header="Report Comment" data-button="report">report</button>
         {%endif%}
-        <div style="font-size: 12px;">{{comment.created_at}}</div>
+        <div style="font-size: 12px;">{{comment.updated_at|default_if_none:comment.created_at}}</div>
       </div>
       <div class="card-body pl-3">
       <div class="pb-3">{{comment.body}}</div> 
