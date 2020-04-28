@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user
 from django.db.models import Q
 from projects.models import *
+from django.contrib import messages
 # Create your views here.
 
 
@@ -19,9 +20,10 @@ from projects.models import *
 def home_page(request):
     # end = Project.objects.filter(end_date=end_date)
     # now = timezone.now()
+    # end_date = cleaned_date.get("end_date")
     # query = end < now
     latest_projects = Project.objects.order_by("-id")[:5]
-    # if query:
+    # if end_date < now :
     heigest_rate_projects = Rate.objects.order_by("-body")[:5]
     category_result = Category.objects.all()
     context = {
@@ -30,7 +32,6 @@ def home_page(request):
         "category_result":category_result
     }
     return render(request, 'home.html', context)
-
 
 @unauthenticated_user
 def register_page(request):
@@ -157,9 +158,11 @@ def search(request):
         tag_results = Tag.objects.filter(Q(name__icontains=query))
         context={
             "title_results":title_results,
-            "tag_results":tag_results
+            "tag_results":tag_results,
         }
+        return render(request,'home.html', context)
+    elif not query:
+        messages.error(request, 'no result found')
     else:
-        messages = messages.error(request,'no result found')
-        context = {"messages":messages}
-    return render(request,'home.html', context)
+         messages.error(request, 'no result found')
+    return render(request,'home.html')
