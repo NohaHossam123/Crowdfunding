@@ -1,6 +1,6 @@
 from .models import Activation
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import UserRegisterationForm, AccountUpdateForm, HighestRate
+from .forms import UserRegisterationForm, AccountUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
 from django.conf import settings

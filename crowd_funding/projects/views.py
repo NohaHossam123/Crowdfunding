@@ -54,11 +54,6 @@ def listprojects(request):
     context = {"projects": projects}
     return render(request, "allprojects.html", context)
 
-
-def addproject(request):
-    pass
-
-
 def project(request, id):
     project = Project.objects.get(id=id)
     donates = project.donate_set.only("amount")
@@ -71,6 +66,8 @@ def project(request, id):
         average += int(str(r))
     if len(rate) != 0:
         average = average / len(rate)
+        totalRate=0
+        totalRate=round(average)
     else:
         average = 0
     imgs = project.projectpictures_set.only("image_path")
@@ -85,7 +82,7 @@ def project(request, id):
     except:
         report=""
    
-    context = {"project": project, "totalRate": average,
+    context = {"project": project, "totalRate": totalRate   ,
                "totalDonate": total_donate, 
                "imgs": imgs, "report": report,
                "user_rate": user_rate
