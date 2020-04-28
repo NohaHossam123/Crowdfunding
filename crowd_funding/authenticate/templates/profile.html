@@ -2,303 +2,259 @@
 <html>
 
 <head>
-	
-  <title>User Profile</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <title>User Profile</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-    {% for message in messages %}
-    <div class="alert alert-success">{{message}}</div>
-    {% endfor %}
-    {{ account_form.errors }}
+{% for message in messages %}
+    <div class="alert alert-success">{{ message }}</div>
+{% endfor %}
+{{ account_form.errors }}
 {{ account_form.non_field_errors }}
 
 
-<hr>
 <div class="container bootstrap snippet">
     <div class="row">
-  		<div class="col-sm-10"><h1>{{ request.user.username}}</h1></div>
-    	<div class="col-sm-2"><img title="profile image" class="img-circle img-responsive" src="http://www.gravatar.com/avatar/28fd20ccec6865e2d5f0e1f4446eb7bf?s=100"></div>
+        <div class="col-sm-10"><h1>{{ request.user.username }}</h1></div>
     </div>
     <div class="row">
-  		<div class="col-sm-3"><!--left col-->
+        <div class="col-sm-3"><!--left col-->
 
 
-      <div class="text-center">
-          {% if request.user.profile_picture %}
-              <img src="{{ request.user.profile_picture.url }}" class="avatar img-circle img-thumbnail" alt="avatar" style="height: 250px">
-          {% else %}
-              <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" alt="avatar" style="height: 250px">
-          {% endif %}
-        <h6>Upload your photo...</h6>
-      </div></hr><br>
+            <div class="text-center">
+                {% if request.user.profile_picture %}
+                    <img src="{{ request.user.profile_picture.url }}" class="avatar img-circle img-thumbnail"
+                         alt="avatar" style="height: 250px">
+                {% else %}
+                    <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail"
+                         alt="avatar" style="height: 250px">
+                {% endif %}
+                <h6>Upload your photo here...</h6>
+            </div>
+            </hr><br>
 
         </div><!--/col-3-->
-    	<div class="col-sm-9">
+        <div class="col-sm-9">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
-                <li><a data-toggle="tab" href="#messages">Projects</a></li>
-                <li><a data-toggle="tab" href="#settings">Donations</a></li>
-              </ul>
+                <li class="active"><a data-toggle="tab" href="#home">My Profile</a></li>
+                <li><a data-toggle="tab" href="#messages">My Projects</a></li>
+                <li><a data-toggle="tab" href="#settings">My Donations</a></li>
+            </ul>
 
-
-          <div class="tab-content">
-            <div class="tab-pane active" id="home">
-                <hr>
-                  <form class="form" action="" method="POST" id="registrationForm" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <input type="file" id="id_profile_picture" class="text-center center-block file-upload" name="profile_picture" value="{{ account_form.initial.profile_picture }}">
-                    </div>
-                        <div class="form-group">
-                        <div class="col-xs-6">
-                            <label for="username"><h4>user name</h4></label>
-                          <input type="text" class="form-control" name="username" id="username" placeholder="username" value="{{ account_form.initial.username }}">
-                        </div>
-                    </div>
-                      <div class="form-group">
-
-                          <div class="col-xs-6">
-                              <label for="first_name"><h4>First name</h4></label>
-                            <input type="text" class="form-control" name="first_name" id="first_name" placeholder="first name" value="{{ account_form.initial.first_name }}">
-                          </div>
-                      </div>
-                      <div class="form-group">
-
-                          <div class="col-xs-6">
-                            <label for="last_name"><h4>Last name</h4></label>
-                              <input type="text" class="form-control" name="last_name" id="last_name" placeholder="last name" value="{{ account_form.initial.last_name }}">
-                          </div>
-                      </div>
-
-                     
-
-                      <div class="form-group">
-                          <div class="col-xs-6">
-                             <label for="mobile"><h4>Mobile</h4></label>
-                              <input type="text" class="form-control" name="mobile" id="mobile" placeholder="enter mobile number" value="{{ account_form.initial.mobile }}">
-                          </div>
-                      </div>
-                      <div class="form-group">
-
-                          <div class="col-xs-6">
-                              <label for="email"><h4>Email</h4></label>
-                              <input type="email" class="form-control" name="email" id="email" placeholder="you@email.com" value="{{ account_form.initial.email }}">
-                          </div>
-                      </div>
-                      <div class="form-group">
-
-                        <div class="col-xs-6">
-                            <label for="country"><h4>Country</h4></label>
-                            <input type="text" class="form-control" name="country" id="country" placeholder="enter your phone" >
-                        </div>
-                    </div>
-                      <div class="form-group">
-
-                          <div class="col-xs-6">
-                              <label for="birthdate"><h4>Birthdate</h4></label>
-                              <input type="date" class="form-control" id="birthdate" placeholder="enter your birthdate">
-                          </div>
-                      </div>
-                      <div class="form-group">
-
-                          <div class="col-xs-6">
-                              <label for="facebook_profile"><h4>facebook_profile</h4></label>
-                              <input type="text" class="form-control" name="facebook_profile" id="facebook_profile" placeholder="enter your facebook url">
-                          </div>
-                      </div>
-                      
-                      <div class="form-group">
-                           <div class="col-xs-12">
-                                <br>
-                              	<button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
-                               	<a href="{% url 'delete' %}" class="btn btn-lg btn-danger" type="reset"><i class="glyphicon glyphicon-trash"></i> Delete Profile</a>
+            <div class="tab-content">
+                <div class="tab-pane active" id="home">
+                    <hr>
+                    <form class="form" action="" method="POST" id="registrationForm" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div>
+                            <div class="col-xs-12">
+                                <h2 style="font-weight: bolder">Basic Info</h2>
                             </div>
-                      </div>
-              	</form>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="first_name"><h4>First name</h4></label>
+                                {% if request.user.first_name %}
+                                    <input type="text" class="form-control" name="first_name" id="first_name"
+                                           value="{{ account_form.initial.first_name }}">
+                                {% else %}
+                                    <input type="text" class="form-control" name="first_name" id="first_name"
+                                           placeholder="enter first name">
+                                {% endif %}
+                            </div>
+                        </div>
 
-              <hr>
+                        <div class="form-group">
+
+                            <div class="col-xs-6">
+                                <label for="last_name"><h4>Last name</h4></label>
+                                {% if request.user.last_name %}
+                                    <input type="text" class="form-control" name="last_name" id="last_name"
+                                           value="{{ account_form.initial.last_name }}">
+                                {% else %}
+                                    <input type="text" class="form-control" name="last_name" id="last_name"
+                                           placeholder="enter last name">
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="email"><h4>Email</h4></label>
+                                {#                                {% if request.user.email %}#}
+                                <input type="email" class="form-control" name="email" id="email"
+                                       placeholder="you@email.com" disabled value="{{ email }}">
+                                {#                                {% else %}#}
+                                {#                                    <input type="email" class="form-control" name="email" id="email"#}
+                                {#                                           placeholder="you@email.com" placeholder="enter your email">#}
+                                {#                                {% endif %}#}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="username"><h4>user name</h4></label>
+                                {% if request.user.username %}
+                                    <input type="text" class="form-control" name="username" id="username"
+                                           value="{{ account_form.initial.username }}">
+                                {% else %}
+                                    <input type="text" class="form-control" name="username" id="username"
+                                           placeholder="enter username">
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="mobile"><h4>Mobile</h4></label>
+                                {% if request.user.mobile %}
+                                    <input type="text" class="form-control" name="mobile" id="mobile"
+                                           value="{{ account_form.initial.mobile }}">
+                                {% else %}
+                                    <input type="text" class="form-control" name="mobile" id="mobile"
+                                           placeholder="enter mobile number">
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="profile_picture"><h4>Profile Picture</h4></label>
+                                <input type="file" id="id_profile_picture" class="form-control" name="profile_picture"
+                                       value="{{ account_form.initial.profile_picture }}">
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="col-xs-12">
+                                <h2 style="font-weight: bolder">Personal Info</h2>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="country"><h4>Country</h4></label>
+                                {% if request.user.country %}
+                                    <input type="text" class="form-control" name="country" id="country"
+                                           value="{{ account_form.initial.country }}">
+                                {% else %}
+                                    <input type="text" class="form-control" name="country" id="country"
+                                           placeholder="enter your country">
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            <div class="col-xs-6">
+                                <label for="birthdate"><h4>Birthdate</h4></label>
+                                {% if request.user.birthdate %}
+                                    <input type="date" name="birthdate" class="form-control" id="birthdate"
+                                           value="{{ account_form.initial.birthdate }}">
+                                {% else %}
+                                    <input type="date" name="birthdate" class="form-control" id="birthdate">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="facebook_profile"><h4>facebook_profile</h4></label>
+                                {% if request.user.facebook_profile %}
+                                    <input type="text" class="form-control" name="facebook_profile"
+                                           id="facebook_profile"
+                                           value="{{ account_form.initial.facebook_profile }}">
+                                {% else %}
+                                    <input type="text" class="form-control" name="facebook_profile"
+                                           id="facebook_profile" placeholder="enter your facebook url">
+                                {% endif %}
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-xs-12" style="margin-bottom: 30px">
+                                <br>
+                                <button class="btn btn-lg btn-success" type="submit" style="width: 150px"><i
+                                        class="glyphicon glyphicon-ok-sign"></i> Update
+                                </button>
+                                <a href="{% url 'delete' %}" id="delete_profile" class="btn btn-lg btn-danger"
+                                   style="margin-left: 170px"><i class="glyphicon glyphicon-trash"></i> Delete
+                                    Profile</a>
+
+                                <a href="{% url 'home' %}" id="delete_profile" class="btn btn-lg btn-primary"
+                                   style="margin-left: 210px"><i class="glyphicon glyphicon-home"></i> Home</a>
+                            </div>
+                        </div>
+                    </form>
+
+                    <hr>
+
+                </div><!--/tab-pane-->
+                <div class="tab-pane" id="messages">
+
+                    <h2></h2>
+
+                    <hr>
+
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <br>
+                            <button class="btn btn-lg btn-success" type="submit"><i
+                                    class="glyphicon glyphicon-ok-sign"></i> Save
+                            </button>
+                            <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+
+                </div><!--/tab-pane-->
+                <div class="tab-pane" id="settings">
+
+
+                    <hr>
+
+                </div>
 
             </div><!--/tab-pane-->
-            <div class="tab-pane" id="messages">
+        </div><!--/tab-content-->
 
-              <h2></h2>
+    </div><!--/col-9-->
+</div><!--/row-->
+<script>
+    $(document).ready(function () {
+        var readURL = function (input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
 
-              <hr>
-                 <form class="form" action="##" method="post" id="registrationForm">
-                     <div class="form-group">
+                reader.onload = function (e) {
+                    $('.avatar').attr('src', e.target.result);
+                }
 
-                         <div class="col-xs-6">
-                             <label for="first_name"><h4>First name</h4></label>
-                             <input type="text" class="form-control" name="first_name" id="first_name" placeholder="first name" title="enter your first name if any.">
-                         </div>
-                     </div>
-                     <div class="form-group">
-
-                         <div class="col-xs-6">
-                           <label for="last_name"><h4>Last name</h4></label>
-                             <input type="text" class="form-control" name="last_name" id="last_name" placeholder="last name" title="enter your last name if any.">
-                         </div>
-                     </div>
-
-                     <div class="form-group">
-
-                         <div class="col-xs-6">
-                             <label for="phone"><h4>Phone</h4></label>
-                             <input type="text" class="form-control" name="phone" id="phone" placeholder="enter phone" title="enter your phone number if any.">
-                         </div>
-                     </div>
-
-                     <div class="form-group">
-                         <div class="col-xs-6">
-                            <label for="mobile"><h4>Mobile</h4></label>
-                             <input type="text" class="form-control" name="mobile" id="mobile" placeholder="enter mobile number" title="enter your mobile number if any.">
-                         </div>
-                     </div>
-                     <div class="form-group">
-
-                         <div class="col-xs-6">
-                             <label for="email"><h4>Email</h4></label>
-                             <input type="email" class="form-control" name="email" id="email" placeholder="you@email.com" title="enter your email.">
-                         </div>
-                     </div>
-                     <div class="form-group">
-
-                         <div class="col-xs-6">
-                             <label for="email"><h4>Location</h4></label>
-                             <input type="email" class="form-control" id="location" placeholder="somewhere" title="enter a location">
-                         </div>
-                     </div>
-                     <div class="form-group">
-
-                         <div class="col-xs-6">
-                             <label for="password"><h4>Password</h4></label>
-                             <input type="password" class="form-control" name="password" id="password" placeholder="password" title="enter your password.">
-                         </div>
-                     </div>
-                     <div class="form-group">
-
-                         <div class="col-xs-6">
-                           <label for="password2"><h4>Verify</h4></label>
-                             <input type="password" class="form-control" name="password2" id="password2" placeholder="password2" title="enter your password2.">
-                         </div>
-                     </div>
-                     <div class="form-group">
-                          <div class="col-xs-12">
-                               <br>
-                                 <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
-                                  <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>
-                           </div>
-                     </div>
-                 </form>
-
-            </div><!--/tab-pane-->
-            <div class="tab-pane" id="settings">
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
 
 
-                 <hr>
-                 <form class="form" action="##" method="post" id="registrationForm">
-                     <div class="form-group">
+        $(".file-upload").on('change', function () {
+            readURL(this);
+        });
+    });
 
-                         <div class="col-xs-6">
-                             <label for="first_name"><h4>First name</h4></label>
-                             <input type="text" class="form-control" name="first_name" id="first_name" placeholder="first name" title="enter your first name if any.">
-                         </div>
-                     </div>
-                     <div class="form-group">
-
-                         <div class="col-xs-6">
-                           <label for="last_name"><h4>Last name</h4></label>
-                             <input type="text" class="form-control" name="last_name" id="last_name" placeholder="last name" title="enter your last name if any.">
-                         </div>
-                     </div>
-
-                     <div class="form-group">
-
-                         <div class="col-xs-6">
-                             <label for="phone"><h4>Phone</h4></label>
-                             <input type="text" class="form-control" name="phone" id="phone" placeholder="enter phone" title="enter your phone number if any.">
-                         </div>
-                     </div>
-
-                     <div class="form-group">
-                         <div class="col-xs-6">
-                            <label for="mobile"><h4>Mobile</h4></label>
-                             <input type="text" class="form-control" name="mobile" id="mobile" placeholder="enter mobile number" title="enter your mobile number if any.">
-                         </div>
-                     </div>
-                     <div class="form-group">
-
-                         <div class="col-xs-6">
-                             <label for="email"><h4>Email</h4></label>
-                             <input type="email" class="form-control" name="email" id="email" placeholder="you@email.com" title="enter your email.">
-                         </div>
-                     </div>
-                     <div class="form-group">
-
-                         <div class="col-xs-6">
-                             <label for="email"><h4>Location</h4></label>
-                             <input type="email" class="form-control" id="location" placeholder="somewhere" title="enter a location">
-                         </div>
-                     </div>
-                     <div class="form-group">
-
-                         <div class="col-xs-6">
-                             <label for="password"><h4>Password</h4></label>
-                             <input type="password" class="form-control" name="password" id="password" placeholder="password" title="enter your password.">
-                         </div>
-                     </div>
-                     <div class="form-group">
-
-                         <div class="col-xs-6">
-                           <label for="password2"><h4>Verify</h4></label>
-                             <input type="password" class="form-control" name="password2" id="password2" placeholder="password2" title="enter your password2.">
-                         </div>
-                     </div>
-                     <div class="form-group">
-                          <div class="col-xs-12">
-                               <br>
-                                 <button class="btn btn-lg btn-success pull-right" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
-                                  <!--<button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>-->
-                           </div>
-                     </div>
-                 </form>
-             </div>
-
-              </div><!--/tab-pane-->
-          </div><!--/tab-content-->
-
-        </div><!--/col-9-->
-    </div><!--/row-->
+    let delete_profile = document.getElementById("delete_profile")
+    delete_profile.addEventListener("click", (e) => {
+        e.preventDefault()
+        if (confirm('Are you sure you want to delete your account?')) {
+            location.href = "{% url 'delete' %}";
+        } else {
+            location.href = "{% url 'profile' %}";
+        }
+    })
+</script>
 </body>
 </html>
-
-<script>
-    $(document).ready(function() {
-
-
-    var readURL = function(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('.avatar').attr('src', e.target.result);
-            }
-
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-
-    $(".file-upload").on('change', function(){
-        readURL(this);
-    });
-});
-</script>
-
-
 
