@@ -1,6 +1,6 @@
 from .models import Activation
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import UserRegisterationForm, AccountUpdateForm, HighestRate
+from .forms import UserRegisterationForm, AccountUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
 from django.conf import settings
@@ -164,11 +164,5 @@ def search(request):
     elif not query:
         messages.error(request, 'no result found')
     else:
-<<<<<<< HEAD
          messages.error(request, 'no result found')
     return render(request,'home.html')
-=======
-        messages = messages.error(request,'no result found')
-        context = {"messages":messages}
-    return render(request,'home.html', context)
->>>>>>> 35b1827d2b8c0056082f8547d6fb1619475e0b2e
