@@ -21,7 +21,7 @@ admin.site.register(ReportComment)
 class SelectedToShowAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
-        if SelectedToShow.objects.all().count() >1: 
+        if SelectedToShow.objects.all().count() >4: 
             messages.set_level(request, messages.ERROR)
             messages.error(request, 'Featured cannot be more than 5 projects....')
             return
