@@ -32,7 +32,9 @@ class UserRegisterationForm(UserCreationForm):
 class AccountUpdateForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ['first_name','last_name','email','username', 'profile_picture','mobile','birthdate','country','facebook_profile']
+        fields = ['first_name','last_name','username', 'profile_picture','mobile','birthdate','country','facebook_profile']
+        readonly_fields = ['email']
+
     def clean_email(self):
         if self.is_valid():
             email = self.cleaned_data['email']
