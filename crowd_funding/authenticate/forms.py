@@ -71,4 +71,3 @@ class AccountUpdateForm(forms.ModelForm):
                 return last_name
             raise forms.ValidationError('last name "%s" is already in use' % account.last_name)
 
-    
