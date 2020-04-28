@@ -12,11 +12,10 @@ from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user
 from django.db.models import Q
 from projects.models import *
-from django.contrib import messages
 # Create your views here.
 
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def home_page(request):
     # end = Project.objects.filter(end_date=end_date)
     # now = timezone.now()
@@ -27,9 +26,9 @@ def home_page(request):
     heigest_rate_projects = Rate.objects.order_by("-body")[:5]
     category_result = Category.objects.all()
     context = {
-        "latest_projects":latest_projects,
+        "latest_projects": latest_projects,
         "heighest_rate_projects": heigest_rate_projects,
-        "category_result":category_result
+        "category_result": category_result
     }
     return render(request, 'home.html', context)
 
@@ -52,12 +51,12 @@ def register_page(request):
             '''
             from_email = settings.EMAIL_HOST_USER
             to_list = [request.POST['email'], from_email]
-            send_mail(subject, message, from_email, to_list, fail_silently=False)
+            send_mail(subject, message, from_email, to_list, fail_silently=True)
 
             username = form.cleaned_data.get('username')
             messages.success(request,
                              f'Wonderful {username}, account has been created!, kindly check your email address to activate your account')
-            return redirect('home')
+            return redirect('login')
     else:
         form = UserRegisterationForm()
     return render(request, 'register.html', {'form': form})
@@ -81,7 +80,7 @@ def login_page(request):
 
 def logout_page(request):
     logout(request)
-    return redirect('login')
+    return redirect('home')
 
 
 def activate(req, token):
@@ -105,19 +104,18 @@ def account_view(request):
     context = {}
     
     if request.method == 'POST':
-        form = AccountUpdateForm(request.POST,request.FILES, instance=request.user)
+        form = AccountUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
-            print(request.FILES)
+            # print(request.FILES['profile_picture'])
             form.initial = {
-            "first_name": request.POST['first_name'],
-            "last_name": request.POST['last_name'],
-            "email": request.POST['email'],
-            "profile_picture": request.POST['profile_picture'],
-            "username": request.POST['username'],
-            "mobile": request.POST['mobile'],
-            "birthdate": request.POST.get('birthdate'),
-            "country": request.POST['country'],
-            "facebook_profile": request.POST['facebook_profile'],
+                "first_name": request.POST['first_name'],
+                "last_name": request.POST['last_name'],
+                # "email": request.POST['email'],
+                "username": request.POST['username'],
+                "mobile": request.POST['mobile'],
+                "birthdate": request.POST.get('birthdate'),
+                "country": request.POST['country'],
+                "facebook_profile": request.POST['facebook_profile'],
 
             }
             form.save()
@@ -125,7 +123,6 @@ def account_view(request):
     else:
         form = AccountUpdateForm(
             initial={
-                "email": request.user.email,
                 "username": request.user.username,
                 "profile_picture": request.user.profile_picture,
                 "first_name": request.user.first_name,
@@ -137,32 +134,47 @@ def account_view(request):
             }
         )
     context['account_form'] = form
+    context['email'] = request.user
     return render(request, 'profile.html', context)
 
+
+@login_required(login_url='login')
 def delete_profile(request):
     if request.method == 'GET':
         request.user.delete()
     return redirect('login')
-    
-    
 
-def projects_view(request , id):
-    projects = Project.objects.filter(category_id = id)
+
+def projects_view(request, id):
+    projects = Project.objects.filter(category_id=id)
     list_projects = {"projects":projects}
-    return render(request,"show_projects.html",list_projects)
+    return render(request, "show_projects.html",list_projects)
+
 
 def search(request):
     query = request.GET.get('q')
     if query:
         title_results = Project.objects.filter(Q(title__icontains=query))
         tag_results = Tag.objects.filter(Q(name__icontains=query))
+<<<<<<< HEAD
+        context = {
+            "title_results": title_results,
+            "tag_results": tag_results,
+=======
         context={
             "title_results":title_results,
             "tag_results":tag_results,
+>>>>>>> 74d78fe9b099871c6a89ea69cf4d0d148ab61e91
         }
         return render(request,'home.html', context)
     elif not query:
         messages.error(request, 'no result found')
     else:
+<<<<<<< HEAD
+        messages = messages.error(request, 'no result found')
+        context = {"messages": messages}
+    return render(request, 'home.html', context)
+=======
          messages.error(request, 'no result found')
     return render(request,'home.html')
+>>>>>>> 74d78fe9b099871c6a89ea69cf4d0d148ab61e91
