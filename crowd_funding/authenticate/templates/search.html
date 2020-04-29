@@ -1,0 +1,102 @@
+{% extends 'navlayout.html' %}
+{% block title %} search {% endblock %}
+{% block content %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+{% if title_results %}
+<div class="cards-list">
+    {% for project in title_results %}
+        <a href="{% url 'login' %}">
+            <div class="card">
+                <div class="card_image">
+                </div>
+                <div class="card_title title-black">
+                <h5><span>Category: </span>{{ project.category.name }}</h5>
+                </div>
+                <div class="card_title title-black">
+                    <h5><span>Total target: </span>{{ project.total_target }}</h5>
+                </div>
+                <div class="card_title title-black">
+                    <h5><span>End date: </span>{{ project.end_date }} </h5>
+                </div>
+                <div class="card_title title-black">
+                    <h5><span>Start date: </span>{{ project.start_date }} </h5>
+                </div>
+                <div class="card_title title-black">
+                    <h5><span>Details: </span>{{ project.details }} </h5>
+                </div>
+                <div class="card_title title-black">
+                    <h5><span>Title: </span>{{ project.title }}</h5>
+                </div>
+            </div>
+        </a>
+{% endfor %}
+</div>
+{% elif tag_results %}
+<div class="cards-list">
+    {% for tag in tag_results %}
+    <div class="cards-list">
+        {% for tag_project in tag.projects.all %}
+        <a href="{% url 'login' %}">
+            <div class="card" style="width:28em;height:50em;padding:1em;">
+                <div class="card_image">
+                </div>
+                <div class="card_title title-black">
+                    <h5><span>Category: </span>{{ tag_project.category.name }}</h5>
+                </div>
+                <div class="card_title title-black">
+                    <h5><span>Total target: </span>{{ tag_project.total_target }}</h5>               
+                </div>
+                <div class="card_title title-black">
+                    <h5> <span>End date: </span>{{ tag_project.end_date }}</h5>
+                </div> 
+                <div class="card_title title-black">
+                    <h5><span>Start date: </span>{{ tag_project.start_date }}</h5>
+                </div> 
+                <div class="card_title title-black">
+                    <h5><span>Details: </span>{{ tag_project.details }} </h5>
+                </div>
+                <div class="card_title title-black">
+                    <h5><span>Title:</span>{{ tag_project.title }}</h5>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="cards-list">
+{% for project in projects %}
+    <a href="{% url 'login' %}">
+        <div class="card" style="width:28em;height:50em;padding:1em;">
+            <div class="card_image">
+            </div>
+            <div class="card_title title-black">
+                <h5><span>Category: </span>{{ project.category.name }}</h5>
+            </div>
+            <div class="card_title title-black">
+                <h5><span>Total target: </span>{{ project.total_target }}</h5>               
+            </div>
+            <div class="card_title title-black">
+                <h5> <span>End date: </span>{{ project.end_date }}</h5>
+            </div> 
+            <div class="card_title title-black">
+                <h5><span>Start date: </span>{{ project.start_date }}</h5>
+            </div> 
+            <div class="card_title title-black">
+                <h5><span>Details: </span>{{ project.details }} </h5>
+            </div>
+            <div class="card_title title-black">
+                <h5><span>Title:</span>{{ project.title }}</h5>
+            </div>
+        {% endfor %}
+        </div>
+    </a>
+{% endfor %}
+</div>
+{% endif %}
+{% endblock %}

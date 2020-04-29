@@ -62,8 +62,8 @@ def listprojects(request):
 
 def project(request, id):
     project = Project.objects.get(id=id)
-    donates = project.donate_set.only("amount")
     total_donate = 0
+    donates = project.donations.only("amount")
     for d in donates:
         total_donate += float(str(d))
     rate = project.rate_set.only("body")
@@ -76,9 +76,9 @@ def project(request, id):
         totalRate=round(average)
     else:
         average = 0
-    imgs = project.projectpictures_set.only("image_path")
-    for r in imgs:
-        print (r.image_path)
+    # imgs = project.projectpictures_set.only("image_path")
+    # for r in imgs:
+    #     print (r.image_path)
     try:
         user_rate = project.rate_set.get(user_id=request.user.id).body
     except:
@@ -90,7 +90,7 @@ def project(request, id):
    
     context = {"project": project, "totalRate": totalRate   ,
                "totalDonate": total_donate, 
-               "imgs": imgs, "report": report,
+               "report": report,
                "user_rate": user_rate
                }
     return render(request, "project.html", context)

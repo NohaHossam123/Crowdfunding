@@ -37,7 +37,7 @@
 <div class="container">
     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
     <div class="carousel-inner">
-        {% for img in imgs %}
+        {% for img in project.images.all %}
             {%if  forloop.counter == 1 %}
                 <div class="carousel-item active">
             {% else %}
