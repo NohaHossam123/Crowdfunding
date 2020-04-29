@@ -8,74 +8,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
-    <style>
-        .cards-list {
-            z-index: 0;
-            width: 30%;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            margin-right: 20px;
-            flex-wrap: wrap;
-        }
 
-        .card {
-            margin: 30px auto;
-            width: 250px;
-            height: 300px;
-            border-radius: 40px;
-            box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.15), 1px -5px 20px 7px rgba(0, 0, 0, 0.22);
-            cursor: pointer;
-            transition: 0.4s;
-        }
-
-        .card .card_image {
-            width: inherit;
-            height: inherit;
-            border-radius: 40px;
-        }
-
-        .card .card_image img {
-            width: inherit;
-            height: inherit;
-            border-radius: 40px;
-            object-fit: cover;
-        }
-
-        .card .card_title {
-            text-align: center;
-            border-radius: 0px 0px 40px 40px;
-            font-family: sans-serif;
-            font-weight: bold;
-            font-size: 30px;
-            margin-top: -80px;
-            height: 40px;
-        }
-
-        .card:hover {
-            transform: scale(0.9, 0.9);
-            box-shadow: 5px 5px 30px 15px rgba(0, 0, 0, 0.25),
-            -5px -5px 30px 15px rgba(0, 0, 0, 0.22);
-        }
-
-        .title-white {
-            color: white;
-        }
-
-        .title-black {
-            color: black;
-        }
-
-        @media all and (max-width: 500px) {
-            .card-list {
-                /* On small screens, we are no longer using row direction but column */
-                flex-direction: column;
-            }
-        }
-    </style>
 </head>
 <body>
 {% for message in messages %}
@@ -246,7 +183,7 @@
                                     Profile</a>
 
                                 <a href="{% url 'home' %}" id="delete_profile" class="btn btn-lg btn-primary"
-                                   style="margin-left: 210px"><i class="glyphicon glyphicon-home"></i> Home</a>
+                                   style="margin-left: 150px"><i class="glyphicon glyphicon-home"></i> Home</a>
                             </div>
                         </div>
                     </form>
@@ -262,18 +199,30 @@
                             project(s)</h3>
                     </div>
                     {% for project in user_project %}
-                        <a href="/project/{{ project.id }}">
-                            <div class="tab-pane call-sm-6" id="messages">
-                                <div class="cards-list col-xs-3">
-                                    <div class="card">
-                                        <div class="card_image"><img src="/images/{{ project.images.first }}"></div>
-                                        <div class="card_title title-black">
-                                            <p>{{ project.title }}</p>
-                                        </div>
+                        <div class="container-fluid" style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap">
+                            <a href="/project/{{ project.id }}">
+                                <!-- Card -->
+                                <div class="card" style="width: 100px;height: 100px">
+                                    <!-- Card image -->
+                                    <img class="card-img-top" src="/images/{{ project.images.first }}"
+                                         alt="Card image cap">
+
+                                    <!-- Card content -->
+                                    <div class="card-body">
+
+                                        <!-- Title -->
+                                        <h4 class="card-title"><a>{{ project.title }}</a></h4>
+                                        <!-- Text -->
+                                        <p class="card-text">Hello</p>
+                                        <!-- Button -->
+                                        <a href="#" class="btn btn-primary">Button</a>
+
                                     </div>
+
                                 </div>
-                            </div>
-                        </a>
+                                <!-- Card -->
+                            </a>
+                        </div>
                         {% empty %}
                         <h2 style="text-align: center;margin-top: 30px">You do not have projects for now!</h2>
                     {% endfor %}
@@ -287,20 +236,24 @@
                             donated {{ donations.count }} project(s)</h3>
                     </div>
                     {% for project in donations %}
-                        <a href="/project/{{ project.id }}">
-                            <div class="tab-pane call-sm-6" id="messages">
-                                <div class="cards-list col-xs-3">
-                                    <div class="card">
-                                        <div class="card_image"><img src="/images/{{ project.images.first }}"></div>
-                                        <div class="card_title title-black">
-                                            <p>{{ project.title }}</p>
+                        <div style="display: flex;flex-direction: column;">
+                            <a href="/project/{{ project.id }}">
+                                <div class="tab-pane call-sm-6" id="messages">
+                                    <div class="cards-list col-xs-3">
+                                        <div class="card">
+                                            <div class="card_image"><img src="/images/{{ project.images.first }}"></div>
+                                            <div class="card_title title-black">
+                                                <p>{{ project.title }}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                            </a>
+                            <div style="margin-left: 30px">
+                                <span>Target: ${{ project.total_target }} </span>
+                                <span>Current: ${{ total_donate }} </span>
                             </div>
-                        </a>
-                        <h2>{{ project.total_target}}</h2>
-                        <h2>{{ total_donate }}</h2>
+                        </div>
                         {% empty %}
                         <h2 style="text-align: center;margin-top: 30px"> Currently you don't have any donations !</h2>
                     {% endfor %}

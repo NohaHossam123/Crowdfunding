@@ -98,13 +98,13 @@ def activate(req, token):
 
 
 @login_required(login_url='login')
-def account_view(request, id):
+def account_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
     context = {}
     user_project = Project.objects.filter(user=request.user)
-    project = Project.objects.get(id=id)
-    donate = project.donate_set("amount")
+    project = Project.objects.get(id=request.user.id)
+    donate = project.donations.only("amount")
     total_donate = 0
     for d in donate:
         total_donate += float(str(d))
