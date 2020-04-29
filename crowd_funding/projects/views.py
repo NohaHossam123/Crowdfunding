@@ -15,11 +15,11 @@ def project_create_view(request):
     # form_class = FileFieldForm
     # template_name = 'project_create.html'  # Replace with your template.
     form = ProjectForm(request.POST or None, initial = {'category_name': Category.objects.all()})
-    print(request.FILES.getlist('images'))
     if form.is_valid():
         project = form.save(commit=False)
         project.user = request.user
         project.save()
+        print("inserted")
     
     context = {
         'form': form
@@ -32,6 +32,18 @@ def project_create_view(request):
                     image_path=file
                 )
                 instance.save()
+
+    # get tags
+    # tags = request.POST.get('tags').split(',')
+    # print(tags)
+    # for value in request.POST.get('tags').split(','):
+    #             print(value)
+    #             instance = Tag(
+    #                     projects=project,
+    #                     name=value
+    #                 )
+    #             instance.save()
+        
 
     return render(request, "project_create.html",context)
 
