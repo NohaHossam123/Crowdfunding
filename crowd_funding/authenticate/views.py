@@ -103,15 +103,13 @@ def account_view(request):
         return redirect('login')
     context = {}
     user_project = Project.objects.filter(user=request.user)
-    donations = Project.objects.filter(donations__user=request.user)  
+    donations = Donate.objects.filter(user=request.user)
     if request.method == 'POST':
         form = AccountUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
-            # print(request.FILES['profile_picture'])
             form.initial = {
                 "first_name": request.POST['first_name'],
                 "last_name": request.POST['last_name'],
-                # "email": request.POST['email'],
                 "username": request.POST['username'],
                 "mobile": request.POST['mobile'],
                 "birthdate": request.POST.get('birthdate'),
@@ -134,8 +132,8 @@ def account_view(request):
                 "facebook_profile": request.user.facebook_profile,
             }
         )
-    context['user_project'] =  user_project
-    context['donations']= donations    
+    context['user_project'] = user_project
+    context['donations'] = donations
     context['account_form'] = form
     context['email'] = request.user
     return render(request, 'profile.html', context)
