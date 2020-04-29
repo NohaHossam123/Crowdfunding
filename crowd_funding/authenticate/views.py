@@ -98,12 +98,17 @@ def activate(req, token):
 
 
 @login_required(login_url='login')
-def account_view(request):
+def account_view(request, id):
     if not request.user.is_authenticated:
         return redirect('login')
     context = {}
     user_project = Project.objects.filter(user=request.user)
-    donations = Donate.objects.filter(user=request.user)
+    project = Project.objects.get(id=id)
+    donate = project.donate_set("amount")
+    total_donate = 0
+    for d in donate:
+        total_donate += float(str(d))
+    donations = Project.objects.filter(donations__user=request.user)
     if request.method == 'POST':
         form = AccountUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -135,6 +140,7 @@ def account_view(request):
     context['user_project'] = user_project
     context['donations'] = donations
     context['account_form'] = form
+    context['total_donate'] = total_donate
     context['email'] = request.user
     return render(request, 'profile.html', context)
 
