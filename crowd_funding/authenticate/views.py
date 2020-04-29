@@ -1,6 +1,6 @@
 from .models import Activation
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import UserRegisterationForm, AccountUpdateForm, HighestRate
+from .forms import UserRegisterationForm, AccountUpdateForm
 from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
 from django.conf import settings
@@ -15,9 +15,10 @@ from projects.models import *
 # Create your views here.
 
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def home_page(request):
-    # end = Project.objects.filter(end_date=end_date)
+    # project_end_date = Project.objects.all()
+    # end_date = project_end_date[0].end_date
     # now = timezone.now()
     # query = end < now
     latest_projects = Project.objects.order_by("-id")[:5]
@@ -39,7 +40,6 @@ def home_page(request):
     }
     return render(request, 'home.html', context)
 
-
 @unauthenticated_user
 def register_page(request):
     if request.method == 'POST':
@@ -59,12 +59,12 @@ def register_page(request):
             '''
             from_email = settings.EMAIL_HOST_USER
             to_list = [request.POST['email'], from_email]
-            send_mail(subject, message, from_email, to_list, fail_silently=False)
+            send_mail(subject, message, from_email, to_list, fail_silently=True)
 
             username = form.cleaned_data.get('username')
             messages.success(request,
                              f'Wonderful {username}, account has been created!, kindly check your email address to activate your account')
-            return redirect('home')
+            return redirect('login')
     else:
         form = UserRegisterationForm()
     return render(request, 'register.html', {'form': form})
@@ -88,7 +88,7 @@ def login_page(request):
 
 def logout_page(request):
     logout(request)
-    return redirect('login')
+    return redirect('home')
 
 
 def activate(req, token):
@@ -109,34 +109,62 @@ def activate(req, token):
 def account_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
-    # context = {}
-    if request.POST:
-        form = AccountUpdateForm(request.POST, instance=request.user)
+    context = {}
+    user_project = Project.objects.filter(user=request.user)
+    project = Project.objects.get(id=request.user.id)
+    donate = project.donations.only("amount")
+    total_donate = 0
+    for d in donate:
+        total_donate += float(str(d))
+    donations = Project.objects.filter(donations__user=request.user)
+    if request.method == 'POST':
+        form = AccountUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
+            form.initial = {
+                "first_name": request.POST['first_name'],
+                "last_name": request.POST['last_name'],
+                "username": request.POST['username'],
+                "mobile": request.POST['mobile'],
+                "birthdate": request.POST.get('birthdate'),
+                "country": request.POST['country'],
+                "facebook_profile": request.POST['facebook_profile'],
+
+            }
             form.save()
             messages.success(request, "Account has been updated successfully")
     else:
         form = AccountUpdateForm(
             initial={
-                'email': request.user.email,
-                'username': request.user.username,
-                'profile_picture': request.user.profile_picture,
-                'first_name' : request.user.first_name,
-                'last_name' : request.user.last_name,
-                'mobile' : request.user.mobile,
-                'password' : request.user.password,
-                'birthdate' : request.user.birthdate,
-                'country' : request.user.country,
-                'facebook_profile' : request.user.facebook_profile,
+                "username": request.user.username,
+                "profile_picture": request.user.profile_picture,
+                "first_name": request.user.first_name,
+                "last_name": request.user.last_name,
+                "mobile": request.user.mobile,
+                "birthdate": request.user.birthdate,
+                "country": request.user.country,
+                "facebook_profile": request.user.facebook_profile,
             }
         )
-    # context['account_form'] = form
-    return render(request, 'profile.html', {'form': form})
+    context['user_project'] = user_project
+    context['donations'] = donations
+    context['account_form'] = form
+    context['total_donate'] = total_donate
+    context['email'] = request.user
+    return render(request, 'profile.html', context)
 
-def projects_view(request , id):
-    projects = Project.objects.filter(category_id = id)
+
+@login_required(login_url='login')
+def delete_profile(request):
+    if request.method == 'GET':
+        request.user.delete()
+    return redirect('login')
+
+
+def projects_view(request, id):
+    projects = Project.objects.filter(category_id=id)
     list_projects = {"projects":projects}
-    return render(request,"show_projects.html",list_projects)
+    return render(request, "show_projects.html",list_projects)
+
 
 def search(request):
     query = request.GET.get('q')
@@ -145,9 +173,15 @@ def search(request):
         tag_results = Tag.objects.filter(Q(name__icontains=query))
         context={
             "title_results":title_results,
-            "tag_results":tag_results
+            "tag_results":tag_results,
         }
+        return render(request,'search.html', context)
+    elif not query:
+        messages.error(request, 'no result found')
     else:
-        messages = messages.error(request,'no result found')
-        context = {"messages":messages}
-    return render(request,'home.html', context)
+        projects = Project.objects.all()
+        context={
+            "projects":projects
+        }
+        return render(request,'search.html', context)
+    return render(request,'search.html')

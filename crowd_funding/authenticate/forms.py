@@ -30,10 +30,10 @@ class UserRegisterationForm(UserCreationForm):
 
 
 class AccountUpdateForm(forms.ModelForm):
-    password = forms.CharField(label = "password", widget=forms.PasswordInput)
     class Meta:
         model = Account
-        fields = ('email', 'username', 'profile_picture','first_name','last_name','mobile','password','birthdate','country','facebook_profile')
+        fields = ['first_name','last_name','username', 'profile_picture','mobile','birthdate','country','facebook_profile']
+        readonly_fields = ['email']
 
     def clean_email(self):
         if self.is_valid():
@@ -71,15 +71,3 @@ class AccountUpdateForm(forms.ModelForm):
                 return last_name
             raise forms.ValidationError('last name "%s" is already in use' % account.last_name)
 
-    def clean_mobile(self):
-        if self.is_valid():
-            mobile = self.cleaned_data['mobile']
-            try:
-                account = Account.objects.exclude(pk=self.instance.pk).get(mobile=mobile)
-            except Account.DoesNotExist:
-                return mobile
-            raise forms.ValidationError('mobile "%s" is already in use' % account.mobile)
-class HighestRate(forms.ModelForm):
-    class Meta:
-        model=Project
-        fields = ["end_date"]

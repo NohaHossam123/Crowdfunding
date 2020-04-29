@@ -22,6 +22,9 @@
 .star-rating input[type=radio]:checked ~ label {
     color: #f2b600
 }
+.star-color{
+    color: #f2b600
+}
 
 .vs {
     visibility: hidden;

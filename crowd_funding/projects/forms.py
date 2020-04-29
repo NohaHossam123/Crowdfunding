@@ -1,5 +1,6 @@
 # from django import froms
 from django import  forms
+from django.utils import timezone
 
 from .models import Project, Category
 
@@ -29,7 +30,7 @@ class ProjectForm(forms.ModelForm):
                     if len(project_title) == 0:
                         raise forms.ValidationError("project title can't be empty ")
                     if len(project_title) >100:
-                        raise forms.ValidationError("project title can't be more than 100 character ")
+                        raise forms.ValidationError("project title excedded length ")
                     return project_title
       
         def clean_details(self):

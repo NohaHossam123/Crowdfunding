@@ -46,15 +46,15 @@ class Account(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
 
     # CUSTOM FIELDS
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+    first_name = models.CharField(max_length=30, null=True, blank=True)
+    last_name = models.CharField(max_length=30, null=True, blank=True)
     mobile = models.CharField(max_length=11, blank=True)
-    profile_picture = models.ImageField()
+    profile_picture = models.ImageField(null=True, blank=True)
 
     #Extra fields
-    birthdate = models.DateTimeField(null = True, blank = True)
-    country = models.CharField(null = True, blank = True, max_length=50)
-    facebook_profile = models.CharField(null = True, blank = True, max_length=225)
+    birthdate = models.DateField(null=True, blank=True)
+    country = models.CharField(null=True, blank=True, max_length=50)
+    facebook_profile = models.CharField(null=True, blank=True, max_length=225)
     
 
     USERNAME_FIELD = 'email'
