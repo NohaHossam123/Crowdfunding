@@ -19,12 +19,20 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+
+
+
+
 class Tag(models.Model):
     name = models.CharField(max_length = 50)
-    projects = models.ManyToManyField(Project)
 
     def __str__(self):
         return self.name
+
+# # Project-Tag relation Model
+class Tag_projects(models.Model):
+	project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
 class ProjectPictures(models.Model):
     image_path = models.ImageField(null = True , blank = True)
