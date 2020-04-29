@@ -8,12 +8,9 @@ from django.contrib import messages
 
 # Create your views here.
 
-
 # create Form
-
+@login_required(login_url='login')
 def project_create_view(request):
-    # form_class = FileFieldForm
-    # template_name = 'project_create.html'  # Replace with your template.
     form = ProjectForm(request.POST or None, initial = {'category_name': Category.objects.all()})
     if form.is_valid():
         project = form.save(commit=False)
@@ -32,33 +29,30 @@ def project_create_view(request):
                     image_path=file
                 )
                 instance.save()
-
+   
     # get tags
-    # tags = request.POST.get('tags').split(',')
-    # print(tags)
-    # for value in request.POST.get('tags').split(','):
-    #             print(value)
-    #             instance = Tag(
-    #                     projects=project,
-    #                     name=value
-    #                 )
-    #             instance.save()
+    fetched = request.POST.get('tags')
+    if fetched is not None:
+        new_tags = fetched.split(',')
+        saved_tags = list(Tag.objects.all())
+        saved_tags_data = [tag.name for tag in saved_tags]
+        new_unique_tags = [tag for tag in new_tags if tag not in saved_tags_data]
+        print(len (new_unique_tags))
+
+        #check for comming new unique tags
+        if len (new_unique_tags) != 0:
+            # insert in project-tags Only
+            for value in new_unique_tags:
+                    instance = Tag(name= value)
+                    instance.save()
+                    instance.projects.add(project)
+                    
+
+
+
         
 
     return render(request, "project_create.html",context)
-
-
-# if request.method.lower()=="get":
-# book_form = AddBookForm()
-# return render(request, "newbook.html", {"form": book_form})
-# elif request.method.lower()=="post":
-# form = AddBookForm(request.POST, request.FILES)
-# if form.is_valid():
-# form.save()
-# return redirect('/')
-# else:
-# return render(request, "newbook.html", {"form": book_form}) 
-
 
 
 def listprojects(request):
