@@ -71,7 +71,7 @@ class Donate(models.Model):
     project = models.ForeignKey(Project,related_name="donations", on_delete = models.CASCADE)
     amount = models.FloatField()
     def __str__(self):
-        return self.amount.__str__()
+        return str(self.amount)
 
 
 class ReportProject(models.Model):
