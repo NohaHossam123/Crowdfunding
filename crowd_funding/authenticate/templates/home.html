@@ -74,87 +74,36 @@
             </div>
         </a>
     {% endfor %}
-    </div>
-    <div class="content">
-        <h2>The heighest 5 rating running projects</h2>
-    </div>
-    <div class="cards-list">
-        {% for rate_project in heighest_rate_projects %}
-            <a href="{% url 'login' %}">
-                <div class="card" style="width:28em;height:50em;padding:1em;">
-                    <div class="card_image">
-                        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                            <div class="carousel-inner">
-                                {% for picture in rate_project.images.all %}
-                                {%if  forloop.counter == 1 %}
-                                    <div class="carousel-item active">
-                                {% else %}
-                                    <div class="carousel-item">
-                                {% endif %}
-                                    <img src="/static/images/{{ picture.image_path }}" height="80px" width="310" alt="Not found">
-                                </div>
-                            {% endfor %}
-                                </div>
-                                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card_title title-black">
-                        <h6 style="padding:40px 0;"><span>Category:</span>{{ rate_project.project.category.name }}</h6>
-                    </div>
-                    <div class="card_title title-black">
-                        <h6 style="padding:40px 0;"><span>End date: </span>{{ rate_project.project.end_date }} </h6>
-                    </div>
-                    <div class="card_title title-black">
-                        <h6 style="padding:40px 0;"><span>Start date: </span>{{ rate_project.project.start_date }}</h6>
-                    </div> 
-                    <div class="card_title title-black">
-                        <h6 style="padding:40px 0;"><span>Details: </span>{{ rate_project.project.details }}</h6>
-                    </div>
-                    <div class="card_title title-black">
-                        <h6 style="padding:40px 0;"><span>Title: </span>{{ rate_project.project.title }} </h6>
-                    </div>
-                </div>
-            </a>
-        {% endfor %}
-    </div>
-    <div class="content">
-        <h2>The latest 5 featured projects</h2>
-    </div>
-    <div class="cards-list">
-        {% for feature_project in featured_projects %} 
-            <a href="{% url 'login' %}">
-                <div class="card">
-                    <div class="card_image">
-                    </div>
-                    <div class="card_title title-black">
-                        <h6><span>Title: </span>{{ feature_project.project.title }} </h6>
-                    </div>
-                    <div class="card_title title-black">
-                        <h6><span>category: </span>{{ feature_project.category.name }} </h6>
-                    </div>
-                    <div class="card_title title-black">
-                        <h6><span>Title: </span>{{ feature_project.project.title }} </h6>
-                    </div>
-                    <div class="card_title title-black">
-                        <h6><span>Title: </span>{{ feature_project.project.title }} </h6>
-                    </div>
-                    <div class="card_title title-black">
-                        <h6><span>Title: </span>{{ feature_project.project.title }} </h6>
-                    </div>
-                    <div class="card_title title-black">
-                        <h6><span>Title: </span>{{ feature_project.project.title }} </h6>
-                    </div>
-                </div>
-            </a>
-        {% endfor %}
-    </div>
-{% endblock %}
-
+</div>
+<div class="heighest">
+    <h2>The heighest 5 rating projects </h2>
+</div>
+<div class="row">
+    {% for rate_project in heighest_rate_projects %}
+        <div class="card"> 
+            <h5><span>Title: </span>{{ rate_project.project.title }} </h5>
+            <h5><span>Details: </span>{{ rate_project.project.details }} </h5>
+            <h5><span>Start date: </span>{{ rate_project.project.start_date }} </h5>
+            <h5><span>End date: </span>{{ rate_project.project.end_date }} </h5>
+            <h5><span>Total target: </span>{{ rate_project.project.total_target }}</h5>
+            <h5><span>Category: </span>{{ rate_project.project.category.name }}</h5>
+        </div>
+    {% endfor %}
+</div>
+<div class="heighest">
+    <h2>The feature 5  projects </h2>
+</div>
+<div class="row">
+    {% for feature_project in featured_projects %}
+        <div class="card"> 
+            <h5><span>Title: </span>{{ feature_project.title }} </h5>
+            <h5><span>Details: </span>{{ feature_project.details }} </h5>
+            <h5><span>Start date: </span>{{ feature_project.start_date }} </h5>
+            <h5><span>End date: </span>{{ feature_project.end_date }} </h5>
+            <h5><span>Total target: </span>{{ feature_project.total_target }}</h5>
+            <h5><span>Category: </span>{{ feature_project.category.name }}</h5>
+        </div>
+    {% endfor %}
+</div>
+</body>
+</html>

@@ -20,18 +20,23 @@ def home_page(request):
     # project_end_date = Project.objects.all()
     # end_date = project_end_date[0].end_date
     # now = timezone.now()
-    latest_projects = Project.objects.all().order_by("-id")[:5]
-    featured_projects = SelectedToShow.objects.order_by("-id")[:5]
+    # query = end < now
+    latest_projects = Project.objects.order_by("-id")[:5]
+    featured_projects = Project.objects.order_by("-id")[:5]
+    project_end_date = Project.objects.all()
+    end_date = project_end_date[0].end_date
+    now = timezone.now()
+    if end_date < now:
+        heigest_rate_projects = Rate.objects.order_by("-body")[:5]
+        context = {
+            "heighest_rate_projects": heigest_rate_projects,
+        }
     category_result = Category.objects.all()
-    # if end_date < now :
-    heigest_rate_projects = Rate.objects.order_by("-body")[:5]
-
+    project_picture = ProjectPictures.objects.all()
     context = {
-        "latest_projects": latest_projects,
-        "heighest_rate_projects": heigest_rate_projects,
-        "category_result": category_result,
+        "latest_projects":latest_projects,
+        "category_result":category_result,
         "featured_projects":featured_projects
-
     }
     return render(request, 'home.html', context)
 
