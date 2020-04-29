@@ -102,5 +102,20 @@
         </div>
     {% endfor %}
 </div>
+<div class="heighest">
+    <h2>The feature 5  projects </h2>
+</div>
+<div class="row">
+    {% for feature_project in featured_projects %}
+        <div class="card"> 
+            <h5><span>Title: </span>{{ feature_project.title }} </h5>
+            <h5><span>Details: </span>{{ feature_project.details }} </h5>
+            <h5><span>Start date: </span>{{ feature_project.start_date }} </h5>
+            <h5><span>End date: </span>{{ feature_project.end_date }} </h5>
+            <h5><span>Total target: </span>{{ feature_project.total_target }}</h5>
+            <h5><span>Category: </span>{{ feature_project.category.name }}</h5>
+        </div>
+    {% endfor %}
+</div>
 </body>
 </html>
