@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 
@@ -9,6 +10,72 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+    <style>
+        .cards-list {
+            /* z-index: 0; */
+            width: 30%;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-right: 0;
+            /* flex-wrap: wrap; */
+        }
+
+        .card {
+            margin: 30px auto;
+            width: 200px;
+            height: 250px;
+            border-radius: 40px;
+            box-shadow: 5px 5px 30px 7px rgba(0, 0, 0, 0.25), -5px -5px 30px 7px rgba(0, 0, 0, 0.22);
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        .card .card_image {
+            width: inherit;
+            height: inherit;
+            border-radius: 40px;
+        }
+
+        .card .card_image img {
+            width: inherit;
+            height: inherit;
+            border-radius: 40px;
+            object-fit: cover;
+        }
+
+        .card .card_title {
+            text-align: center;
+            border-radius: 0px 0px 40px 40px;
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 30px;
+            margin-top: -80px;
+            height: 40px;
+        }
+
+        .card:hover {
+            transform: scale(0.9, 0.9);
+            box-shadow: 5px 5px 30px 15px rgba(0, 0, 0, 0.25),
+            -5px -5px 30px 15px rgba(0, 0, 0, 0.22);
+        }
+
+        .title-white {
+            color: white;
+        }
+
+        .title-black {
+            color: black;
+        }
+
+        @media all and (max-width: 500px) {
+            .card-list {
+                /* On small screens, we are no longer using row direction but column */
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
 {% for message in messages %}
@@ -41,9 +108,9 @@
         </div><!--/col-3-->
         <div class="col-sm-9">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#home">My Profile</a></li>
-                <li><a data-toggle="tab" href="#messages">My Projects</a></li>
-                <li><a data-toggle="tab" href="#settings">My Donations</a></li>
+                <li class="active"><a data-toggle="tab" href="#home"> <i class="fas fa-user"></i> My Profile</a></li>    
+                <li><a data-toggle="tab" href="#messages"> <i class="fas fa-briefcase"></i> My Projects</a></li>
+                <li><a data-toggle="tab" href="#messages"> <i class="fas fa-dollar-sign"></i> My Donations</a></li>
             </ul>
 
             <div class="tab-content">
@@ -193,33 +260,45 @@
                     </form>
 
                     <hr>
-
                 </div><!--/tab-pane-->
-                <div class="tab-pane" id="messages">
-
-                    <h2></h2>
-
-                    <hr>
-
-                    <div class="form-group">
-                        <div class="col-xs-12">
-                            <br>
-                            <button class="btn btn-lg btn-success" type="submit"><i
-                                    class="glyphicon glyphicon-ok-sign"></i> Save
-                            </button>
-                            <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset
-                            </button>
-                        </div>
-                    </div>
-
-                </div><!--/tab-pane-->
-                <div class="tab-pane" id="settings">
 
 
-                    <hr>
 
+                <div class="call-sm-12">
+                    <h3><i class="fab fa-codepen"></i>  You have {{ user_project.count }} projects</h3>
                 </div>
-
+                {% for project in user_project %}
+                    <div class="tab-pane call-sm-12" id="messages">
+                        <div class="cards-list">
+                            <div class="card 1">
+                                <div class="card_image"><img src="/images/{{ project.images.first }}"></div>
+                                <div class="card_title title-black">
+                                    <p>{{ project.title }}</p>
+                                </div>
+                            </div>
+                            </div>
+                
+                        {% endfor %}
+                        
+                    <hr>
+                    <div class="tab-pane" id="home">
+                    <div class="call-sm-12">
+                        <h3><i class="fab fa-codepen"></i>  You have {{ donations.count }} projects</h3>
+                    </div>
+                    {% for project in donations %}
+                        <div class="tab-pane call-sm-12" id="messages">
+                            <div class="cards-list">
+                                <div class="card 1">
+                                    <div class="card_image"><img src="/images/{{ project.images.first }}"></div>
+                                    <div class="card_title title-black">
+                                        <p>{{ project.title }}</p>
+                                    </div>
+                                </div>
+                                </div>
+                    
+                            {% endfor %}
+                        </div>
+                </div><!--/tab-pane-->
             </div><!--/tab-pane-->
         </div><!--/tab-content-->
 

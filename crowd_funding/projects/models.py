@@ -28,10 +28,10 @@ class Tag(models.Model):
 
 class ProjectPictures(models.Model):
     image_path = models.ImageField(null = True , blank = True)
-    project = models.ForeignKey(Project, on_delete = models.CASCADE)
+    project = models.ForeignKey(Project,related_name="images", on_delete = models.CASCADE)
 
     def __str__(self):
-        return self.image_path
+        return self.image_path.__str__()
 
 class SelectedToShow(models.Model):
     project = models.ForeignKey(Project, on_delete = models.CASCADE)
@@ -67,11 +67,11 @@ class Rate(models.Model):
 
 
 class Donate(models.Model):
-    user = models.ForeignKey(Account, on_delete = models.CASCADE)
-    project = models.ForeignKey(Project, on_delete = models.CASCADE)
+    user = models.ForeignKey(Account,related_name="donations", on_delete = models.CASCADE)
+    project = models.ForeignKey(Project,related_name="donations", on_delete = models.CASCADE)
     amount = models.FloatField()
     def __str__(self):
-        return str(self.amount)
+        return self.amount.__str__()
 
 
 class ReportProject(models.Model):

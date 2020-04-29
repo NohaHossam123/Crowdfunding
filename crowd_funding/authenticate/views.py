@@ -102,7 +102,8 @@ def account_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
     context = {}
-    
+    user_project = Project.objects.filter(user=request.user)
+    donations = Project.objects.filter(donations__user=request.user)  
     if request.method == 'POST':
         form = AccountUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -133,6 +134,8 @@ def account_view(request):
                 "facebook_profile": request.user.facebook_profile,
             }
         )
+    context['user_project'] =  user_project
+    context['donations']= donations    
     context['account_form'] = form
     context['email'] = request.user
     return render(request, 'profile.html', context)
