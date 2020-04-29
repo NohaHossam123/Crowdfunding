@@ -109,67 +109,10 @@
 
   </div>
 
-<<<<<<< HEAD
-        @media all and (max-width: 500px) {
-            .card-list {
-                /* On small screens, we are no longer using row direction but column */
-                flex-direction: column;
-            }
-        
-        }
-        .active-cyan-4 input[type=text]:focus:not([readonly]) {
-            border: 1px solid #4dd0e1;
-            box-shadow: 0 0 0 1px #4dd0e1;
-            }
-            .active-cyan-3 input[type=text] {
-            border: 1px solid #4dd0e1;
-            box-shadow: 0 0 0 1px #4dd0e1;
-            }
-    </style>
-</head>
-<body>
-<header class="clearfix">
-    <div class="container">
-        <div class="header-left">
-            <h1>Crowd Funding</h1>
-        </div>
-        <div class="header-right">
-            <label for="open">
-                <span class="hidden-desktop"></span>
-            </label>
-            <input type="checkbox" name="" id="open">
-            <nav>
-                <a href="{% url 'home' %}">Home</a>
-                <a href="#">Inspiration</a>
-                <a href="#">Articles</a>
-                <a href="#">Works</a>
-                <a href="#">Contact</a>
-                {% if request.user.is_authenticated %}
-                    <a href="{% url 'profile' %}">profile</a>
-                    <a href="{% url 'logout' %}">logout</a>
-                {% else %}
-                    <a href="{% url 'register' %}">register</a>
-                    <a href="{% url 'login' %}">login</a>
-                {% endif %}
-            </nav>
-        </div>
-    </div>
-</header>
-<div>
-    {% block content %}
-    {% endblock %}
-=======
->>>>>>> f85298563ca0b808059a5cec76d449ac7aadf1d9
 </div>
 <!-- Card -->
 </div>
-<<<<<<< HEAD
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-=======
     {% block content %}
     {% endblock %}
->>>>>>> f85298563ca0b808059a5cec76d449ac7aadf1d9
 </body>
 </html>
