@@ -6,97 +6,32 @@
     <div class="alert alert-danger" role="alert">{{ message }}</div>
     {% endfor %}
     {% endif %}
-{% if title_results %}
-<div class="cards-list">
+    {% if title_results %}
     {% for project in title_results %}
-        <a href="{% url 'login' %}">
-            <div class="card">
-                <div class="card_image">
-                </div>
-                <div class="card_title title-black">
-                <h5><span>Category: </span>{{ project.category.name }}</h5>
-                </div>
-                <div class="card_title title-black">
-                    <h5><span>Total target: </span>{{ project.total_target }}</h5>
-                </div>
-                <div class="card_title title-black">
-                    <h5><span>End date: </span>{{ project.end_date }} </h5>
-                </div>
-                <div class="card_title title-black">
-                    <h5><span>Start date: </span>{{ project.start_date }} </h5>
-                </div>
-                <div class="card_title title-black">
-                    <h5><span>Details: </span>{{ project.details }} </h5>
-                </div>
-                <div class="card_title title-black">
-                    <h5><span>Title: </span>{{ project.title }}</h5>
-                </div>
-            </div>
+    <div class="container-fluid" style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap">
+        <!-- Card -->
+    {% for rate_project in heighest_rate_projects %}
+    <div class="card" style="width: 280px;height: 380px">
+      <!-- Card image -->
+      <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/images/43.jpg" alt="Card image cap">
+    
+      <!-- Card content -->
+      <div class="card-body">
+    
+        <!-- Title -->
+    
+        <h4 class="card-title"><a>Title: { project.title }}</a></h4>
+        <!-- Text -->
+        <p class="card-text">
+        <p>Details: {{ project.details }} </p>
+        <a href="/project/{{ project.id}}" class="orange-text d-flex flex-row-reverse p-2">
+            <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i></h5>
         </a>
-{% endfor %}
-</div>
-{% elif tag_results %}
-<div class="cards-list">
-    {% for tag in tag_results %}
-    <div class="cards-list">
-        {% for tag_project in tag.projects.all %}
-        <a href="{% url 'login' %}">
-            <div class="card" style="width:28em;height:50em;padding:1em;">
-                <div class="card_image">
-                </div>
-                <div class="card_title title-black">
-                    <h5><span>Category: </span>{{ tag_project.category.name }}</h5>
-                </div>
-                <div class="card_title title-black">
-                    <h5><span>Total target: </span>{{ tag_project.total_target }}</h5>               
-                </div>
-                <div class="card_title title-black">
-                    <h5> <span>End date: </span>{{ tag_project.end_date }}</h5>
-                </div> 
-                <div class="card_title title-black">
-                    <h5><span>Start date: </span>{{ tag_project.start_date }}</h5>
-                </div> 
-                <div class="card_title title-black">
-                    <h5><span>Details: </span>{{ tag_project.details }} </h5>
-                </div>
-                <div class="card_title title-black">
-                    <h5><span>Title:</span>{{ tag_project.title }}</h5>
-                </div>
-            </div>
-        </a>
-        {% endfor %}
+        </p>
     </div>
+    </div>
+    <!-- Card -->
     {% endfor %}
-</div>
-{% else %}
-<div class="cards-list">
-{% for project in projects %}
-    <a href="{% url 'login' %}">
-        <div class="card" style="width:28em;height:50em;padding:1em;">
-            <div class="card_image">
-            </div>
-            <div class="card_title title-black">
-                <h5><span>Category: </span>{{ project.category.name }}</h5>
-            </div>
-            <div class="card_title title-black">
-                <h5><span>Total target: </span>{{ project.total_target }}</h5>               
-            </div>
-            <div class="card_title title-black">
-                <h5> <span>End date: </span>{{ project.end_date }}</h5>
-            </div> 
-            <div class="card_title title-black">
-                <h5><span>Start date: </span>{{ project.start_date }}</h5>
-            </div> 
-            <div class="card_title title-black">
-                <h5><span>Details: </span>{{ project.details }} </h5>
-            </div>
-            <div class="card_title title-black">
-                <h5><span>Title:</span>{{ project.title }}</h5>
-            </div>
-        {% endfor %}
-        </div>
-    </a>
-{% endfor %}
-</div>
+    </div>
 {% endif %}
 {% endblock %}
