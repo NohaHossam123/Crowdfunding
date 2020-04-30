@@ -5,15 +5,13 @@ from .forms import ProjectForm
 from django.contrib.auth.decorators import login_required
 from authenticate.decorators import unauthenticated_user
 from django.contrib import messages
+import datetime
 
 # Create your views here.
 
-
 # create Form
-
+@login_required(login_url='login')
 def project_create_view(request):
-    # form_class = FileFieldForm
-    # template_name = 'project_create.html'  # Replace with your template.
     form = ProjectForm(request.POST or None, initial = {'category_name': Category.objects.all()})
     if form.is_valid():
         project = form.save(commit=False)
@@ -32,33 +30,38 @@ def project_create_view(request):
                     image_path=file
                 )
                 instance.save()
-
+   
     # get tags
-    # tags = request.POST.get('tags').split(',')
-    # print(tags)
-    # for value in request.POST.get('tags').split(','):
-    #             print(value)
-    #             instance = Tag(
-    #                     projects=project,
-    #                     name=value
-    #                 )
-    #             instance.save()
+    fetched = request.POST.get('tags')
+    if fetched is not None:
+        new_tags = fetched.split(',')
+        for i in new_tags:
+            obj, created = Tag.objects.get_or_create(name=i)
+            project.tag_projects_set.create(tag=obj)
+            # new_tags = fetched.split(',')
+            # saved_tags = list(Tag.objects.all())
+            # saved_tags_data = [tag.name for tag in saved_tags]
+            # new_unique_tags = [tag for tag in new_tags if tag not in saved_tags_data]
+            # print(new_tags)
+            # print(len (new_unique_tags))
         
 
+
+    #     #check for comming new unique tags
+    #     if len (new_unique_tags) != 0:
+    #         # insert in project-tags Only
+    #         for value in new_unique_tags:
+    #                 instance = Tag(name= value)
+    #                 instance.save()
+                    
+    # for tag in new_tags:
+    #      instance = Tag_projects(
+    #                 project=project,
+    #                 image_path=file
+    #             )
+    #             instance.save()
+
     return render(request, "project_create.html",context)
-
-
-# if request.method.lower()=="get":
-# book_form = AddBookForm()
-# return render(request, "newbook.html", {"form": book_form})
-# elif request.method.lower()=="post":
-# form = AddBookForm(request.POST, request.FILES)
-# if form.is_valid():
-# form.save()
-# return redirect('/')
-# else:
-# return render(request, "newbook.html", {"form": book_form}) 
-
 
 
 def listprojects(request):
@@ -67,7 +70,7 @@ def listprojects(request):
     return render(request, "allprojects.html", context)
 
 def project(request, id):
-    project = Project.objects.get(id=id)
+    project = Project.objects.get(id=id,end_date__gte= datetime.datetime.now())
     total_donate = 0
     donates = project.donations.only("amount")
     for d in donates:
@@ -82,9 +85,6 @@ def project(request, id):
         totalRate=round(average)
     else:
         average = 0
-    # imgs = project.projectpictures_set.only("image_path")
-    # for r in imgs:
-    #     print (r.image_path)
     try:
         user_rate = project.rate_set.get(user_id=request.user.id).body
     except:
@@ -93,10 +93,13 @@ def project(request, id):
         report = ReportProject.objects.get(project=project, user=request.user)
     except:
         report=""
-   
+    
+    relatedProjects=Project.objects.raw('SELECT *,count(title) as r from projects_project as p RIGHT JOIN projects_tag_projects on project_id where projects_tag_projects.tag_id in (select tp.tag_id from projects_tag_projects as tp where tp.project_id=p.id) GROUP BY title ORDER by r DESC LIMIT 4')
+
     context = {"project": project, "totalRate": totalRate   ,
                "totalDonate": total_donate, 
                "report": report,
+               "relatedProjects": relatedProjects,
                "user_rate": user_rate
                }
     return render(request, "project.html", context)
@@ -190,7 +193,14 @@ def report_comment(request, id):
         messages.error(request, "You reported this comment before!")
     return redirect('project', project_id)
 
-
+@login_required(login_url='login')
+def remove_project(request, id):
+    try:
+        project = Project.objects.get(id=id, user=request.user)
+        project.delete()
+        return redirect('/', id)
+    except:
+        return redirect('/', id)
 
 @login_required(login_url='login')
 def delete_reply(request, id, p_id):

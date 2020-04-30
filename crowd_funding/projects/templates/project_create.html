@@ -1,3 +1,4 @@
+{% extends 'layout.html' %}
 <title>New Project</title>
 
 {% block style_block %}
@@ -11,7 +12,7 @@
 
 {% block content %}
 {% load widget_tweaks %}
-<div class="container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: 30px;margin-bottom: 30px; background-color: #888888;border-radius: 20px;padding-top: 10px;width: 900px">
+<div class="container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: 30px;margin-bottom: 30px; background-color:whitesmoke;border-radius: 20px;padding-top: 10px;width: 900px">
   <div class="col-md-6">
   <form enctype="multipart/form-data" action="{% url 'create_project' %}" method="post" class=""> {% csrf_token %}
   <!-- {{ form.as_p }} -->

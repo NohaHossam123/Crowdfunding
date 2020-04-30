@@ -14,5 +14,6 @@ urlpatterns = [
     path('<id>/<p_id>/deletereply',delete_reply,name="delete_reply"),
     path('<id>/e_comment',edit_comment,name="edit_comment"),
     path('<id>/rate',rate_project,name="rate_project"),
+    path('cancel/<id>',remove_project,name="remove_project"),
     
 ]
