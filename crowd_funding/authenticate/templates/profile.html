@@ -8,10 +8,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 </head>
 <body>
@@ -198,100 +198,82 @@
                         <h3 style="text-align: center"><i class="fab fa-codepen"></i> You have {{ user_project.count }}
                             project(s)</h3>
                     </div>
-                    {% for project in user_project %}
-                        <div class="container-fluid" style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap">
+                    <div class="w3-container" style="display: flex;align-items: center;margin-top: 20px">
+                        {% for project in user_project %}
                             <a href="/project/{{ project.id }}">
-                                <!-- Card -->
-                                <div class="card" style="width: 100px;height: 100px">
-                                    <!-- Card image -->
-                                    <img class="card-img-top" src="/images/{{ project.images.first }}"
-                                         alt="Card image cap">
-
-                                    <!-- Card content -->
-                                    <div class="card-body">
-
-                                        <!-- Title -->
-                                        <h4 class="card-title"><a>{{ project.title }}</a></h4>
-                                        <!-- Text -->
-                                        <p class="card-text">Hello</p>
-                                        <!-- Button -->
-                                        <a href="#" class="btn btn-primary">Button</a>
-
-                                    </div>
-
-                                </div>
-                                <!-- Card -->
+                                <div class="w3-card-4" style="width:35%;height:180px;margin-right: 30px">
+                                    <img src="/images/{{ project.images.first }}" alt="Alps"
+                                         style="width:100%;height: 200px">
                             </a>
-                        </div>
-                        {% empty %}
-                        <h2 style="text-align: center;margin-top: 30px">You do not have projects for now!</h2>
-                    {% endfor %}
-
-                </div>
-
-                <div class="tab-pane" id="settings">
-                    <hr>
-                    <div class="call-sm-12">
-                        <h3 style="text-align: center"><i class="fab fa-codepen"></i> You
-                            donated {{ donations.count }} project(s)</h3>
-                    </div>
-                    {% for project in donations %}
-                        <div style="display: flex;flex-direction: column;">
-                            <a href="/project/{{ project.id }}">
-                                <div class="tab-pane call-sm-6" id="messages">
-                                    <div class="cards-list col-xs-3">
-                                        <div class="card">
-                                            <div class="card_image"><img src="/images/{{ project.images.first }}"></div>
-                                            <div class="card_title title-black">
-                                                <p>{{ project.title }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                            <div style="margin-left: 30px">
-                                <span>Target: ${{ project.total_target }} </span>
-                                <span>Current: ${{ total_donate }} </span>
+                            <div class="w3-container w3-center">
+                                <h4>{{ project.title }}</h4>
                             </div>
+                            </div>
+
+                            {% empty %}
+                            <h2 style="text-align: center;margin-top: 30px">You do not have projects for now!</h2>
+                        {% endfor %}
+                </div>
+            </div>
+
+            <div class="tab-pane" id="settings">
+                <hr>
+                <div class="call-sm-12">
+                    <h3 style="text-align: center"><i class="fab fa-codepen"></i> You
+                        donated {{ donations.count }} project(s)</h3>
+                </div>
+                <div class="w3-container" style="display: flex;align-items: center;margin-top: 20px">
+                    {% for project in donations %}
+                        <a href="/project/{{ project.id }}">
+                            <div class="w3-card-4" style="width:35%;height:180px;margin-right: 30px">
+                                <img src="/images/{{ project.images.first }}" alt="Alps"
+                                     style="width:100%;height: 200px">
+                        </a>
+                        <div class="w3-container w3-center">
+                            <span>Target: ${{ project.total_target }} </span>
+                            <span>Current: ${{ total_donate }} </span>
                         </div>
+                        </div>
+
                         {% empty %}
                         <h2 style="text-align: center;margin-top: 30px"> Currently you don't have any donations !</h2>
                     {% endfor %}
-                </div>
             </div>
-        </div><!--/col-9-->
-    </div><!--/row-->
+        </div>
+    </div>
+</div><!--/col-9-->
+</div><!--/row-->
 
 
-    <script>
-        $(document).ready(function () {
-            var readURL = function (input) {
-                if (input.files && input.files[0]) {
-                    var reader = new FileReader();
+<script>
+    $(document).ready(function () {
+        var readURL = function (input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
 
-                    reader.onload = function (e) {
-                        $('.avatar').attr('src', e.target.result);
-                    }
-
-                    reader.readAsDataURL(input.files[0]);
+                reader.onload = function (e) {
+                    $('.avatar').attr('src', e.target.result);
                 }
-            }
 
-            $(".file-upload").on('change', function () {
-                readURL(this);
-            });
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $(".file-upload").on('change', function () {
+            readURL(this);
         });
+    });
 
-        let delete_profile = document.getElementById("delete_profile")
-        delete_profile.addEventListener("click", (e) => {
-            e.preventDefault()
-            if (confirm('Are you sure you want to delete your account?')) {
-                location.href = "{% url 'delete' %}";
-            } else {
-                location.href = "{% url 'profile' %}";
-            }
-        })
-    </script>
+    let delete_profile = document.getElementById("delete_profile")
+    delete_profile.addEventListener("click", (e) => {
+        e.preventDefault()
+        if (confirm('Are you sure you want to delete your account?')) {
+            location.href = "{% url 'delete' %}";
+        } else {
+            location.href = "{% url 'profile' %}";
+        }
+    })
+</script>
 </body>
 </html>
 

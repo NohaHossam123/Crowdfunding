@@ -5,7 +5,7 @@ from .forms import ProjectForm
 from django.contrib.auth.decorators import login_required
 from authenticate.decorators import unauthenticated_user
 from django.contrib import messages
-from django.views.decorators.http import require_http_methods
+import datetime
 
 # Create your views here.
 
@@ -70,9 +70,9 @@ def listprojects(request):
     return render(request, "allprojects.html", context)
 
 def project(request, id):
-    project = Project.objects.get(id=id)
-    donates = project.donate_set.only("amount")
+    project = Project.objects.get(id=id,end_date__gte= datetime.datetime.now())
     total_donate = 0
+    donates = project.donations.only("amount")
     for d in donates:
         total_donate += float(str(d))
     rate = project.rate_set.only("body")
@@ -85,9 +85,6 @@ def project(request, id):
         totalRate=round(average)
     else:
         average = 0
-    imgs = project.projectpictures_set.only("image_path")
-    for r in imgs:
-        print (r.image_path)
     try:
         user_rate = project.rate_set.get(user_id=request.user.id).body
     except:
@@ -96,10 +93,13 @@ def project(request, id):
         report = ReportProject.objects.get(project=project, user=request.user)
     except:
         report=""
-   
+    
+    relatedProjects=Project.objects.raw('SELECT *,count(title) as r from projects_project as p RIGHT JOIN projects_tag_projects on project_id where projects_tag_projects.tag_id in (select tp.tag_id from projects_tag_projects as tp where tp.project_id=p.id) GROUP BY title ORDER by r DESC LIMIT 4')
+
     context = {"project": project, "totalRate": totalRate   ,
                "totalDonate": total_donate, 
-               "imgs": imgs, "report": report,
+               "report": report,
+               "relatedProjects": relatedProjects,
                "user_rate": user_rate
                }
     return render(request, "project.html", context)
@@ -193,7 +193,14 @@ def report_comment(request, id):
         messages.error(request, "You reported this comment before!")
     return redirect('project', project_id)
 
-
+@login_required(login_url='login')
+def remove_project(request, id):
+    try:
+        project = Project.objects.get(id=id, user=request.user)
+        project.delete()
+        return redirect('/', id)
+    except:
+        return redirect('/', id)
 
 @login_required(login_url='login')
 def delete_reply(request, id, p_id):

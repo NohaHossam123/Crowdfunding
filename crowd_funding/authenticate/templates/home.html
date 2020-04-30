@@ -1,5 +1,7 @@
-{% extends 'navlayout.html' %}
-{% block title %} Home {% endblock %}
+{% extends 'layout.html' %}
+{% for message in messages %}
+    <div class="alert alert-success">{{ message }}</div>
+{% endfor %}
 {% block content %}
     <div class="col-sm-6">
             <div class="search">
@@ -106,5 +108,6 @@
     {% endfor %}
     {% endblock %}
 </div>
+{% endblock %}
 </body>
 </html>

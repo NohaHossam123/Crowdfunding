@@ -64,7 +64,7 @@ def register_page(request):
             username = form.cleaned_data.get('username')
             messages.success(request,
                              f'Wonderful {username}, account has been created!, kindly check your email address to activate your account')
-            return redirect('login')
+            return redirect('home')
     else:
         form = UserRegisterationForm()
     return render(request, 'register.html', {'form': form})
