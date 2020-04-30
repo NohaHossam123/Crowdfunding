@@ -1,35 +1,34 @@
-{% extends 'navlayout.html' %}
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
-    <title>{% block title %}Projects{% endblock %}</title>
-</head>
-<body>
+{% extends 'layout.html' %}
+{% block title %} All projects {% endblock %}
 {% block content %}
-<div class="content">
-    <h2>All projects in {{ category_result.category.name }} category</h2>
-  </div>
-  <div class="cards-list">
-          {% for project in projects %}
-          <a href="/project/{{ project.id }}">
-            <div class="card 1">
-              <div class="card_image">
-              </div>
-              <div class="card_title title-black">
-              <h5><span>Title: </span>{{ project.title }} </h5>
-            </div>
-            </div>
-          </a>
-          {% empty %}
-          <div class="emptyCategory">
-              <h4> No projects found for this category</h4>
-          </div>
-        {% endfor %}
-</div> 
+<div>
+  <h1 class="content" style="color:darkcyan; margin-top:10px ; margin-bottom: 40px; text-align: center;" >All projects in {{ project.category.name }} category</h1>
+</div>
+<div class="container-fluid" style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap">
+        <!-- Card -->
+      {% for project in projects %}
+        <div class="card" style="width: 280px;height: 380px; margin-bottom:20px">
+      <!-- Card image -->
+      <img class="card-img-top" src="/static/images/{{ project.images.first}}" alt="No image" width="270" height="200">
+    
+      <!-- Card content -->
+      <div class="card-body">
+    
+        <!-- Title -->
+    
+        <h4 class="card-title"><a>Title: {{ project.title }}</a></h4>
+        <!-- Text -->
+        <p class="card-text">
+        <p>Details: {{ project.details }} </p>
+        <a href="/project/{{ project.id}}" class="orange-text d-flex flex-row-reverse p-2">
+            <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i></h5>
+        </a>
+        </p>
+    </div>
+    </div>
+    <!-- Card -->
+    {% empty %}
+        <h4 type="text-align:center"> No projects found for this category</h4>
+    {% endfor %}
+    </div>
 {% endblock %}
-</body>
-</html>

@@ -155,19 +155,22 @@ def projects_view(request, id):
     list_projects = {"projects":projects}
     return render(request, "show_projects.html",list_projects)
 
-@login_required(login_url='login')
 def search(request):
     query = request.GET.get('q')
     if query:
         title_results = Project.objects.filter(Q(title__icontains=query))
         tag_results = Tag.objects.filter(Q(name__icontains=query))
+        # tag_projects = Tag_projects.objects.filter(tag_id=tag_results.id)
+        # if not title_results:
+        #     messages.error(request, 'no result found')
+        # elif not tag_results:
+        #     messages.error(request, 'no result found')
         context={
             "title_results":title_results,
             "tag_results":tag_results,
+            # "tag_projects":tag_projects
         }
-        return render(request,'search.html', context)
-    elif not query:
-        messages.error(request, 'no result found')
+        return render(request,'search.html', context)        
     else:
         projects = Project.objects.all()
         context={

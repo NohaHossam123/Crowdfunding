@@ -3,15 +3,35 @@
     <div class="alert alert-success">{{ message }}</div>
 {% endfor %}
 {% block content %}
+<div class="col-lg-6" style="display: flex; justify-content: space-between; margin: 1em">
+    <div class="search">
+        <form class="form-inline active-purple-3 active-purple-4" action="{% url 'search' %}" method="get">
+            {% csrf_token %}
+            <input type="text" placeholder="Search by title or tage.."
+            aria-label="Search" name="q" value = "{{ request.GET.q }}">
+            <button type="submit" class="btn btn-secondary" id="search">Search</button>
+        </form>
+    </div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Categories
+        </button>
+        <div class="dropdown-menu">
+          {% for category in category_result %}
+          <a class="dropdown-item" href="{% url 'show_projects' category.id %}">{{ category.name }}</a>
+          {% endfor %}
+        </div>
+      </div>
+</div>
 <div class="content" style="text-align: center; margin:30px 0; color:rgb(73, 145, 151); font-size: larger; font-weight:bolder;">
-    <h1 style="background-color: darkgray;color: white;">The latest 5 projects </h1>
+    <h1 style="background-color: darkgray;color: white;">The latest projects </h1>
 </div>
 <div class="container-fluid" style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap">
     <!-- Card -->
 {% for project in latest_projects %}
-<div class="card" style="width: 280px;height: 380px">
+<div class="card" style="width: 280px;height: 380px; margin-bottom:20px">
   <!-- Card image -->
-  <img class="card-img-top" src="/static/images/{{ project.images.first}}" alt="Card image cap" width="270" height="200">
+  <img class="card-img-top" src="/static/images/{{ project.images.first}}" alt="No image" width="270" height="200">
   <!-- Card content -->
   <div class="card-body">
 
@@ -34,14 +54,14 @@
 </div>
 
 <div class="content" style="text-align: center; margin:30px 0; color:rgb(73, 145, 151); font-size: larger; font-weight:bolder;">
-    <h1 style="background-color: darkgray;color: white;">The heighest 5 running projects </h1>
+    <h1 style="background-color: darkgray;color: white;">The heighest rating running projects </h1>
 </div>
 <div class="container-fluid" style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap">
     <!-- Card -->
 {% for rate_project in heigest_rate_projects %}
-<div class="card" style="width: 280px;height: 380px">
+<div class="card" style="width: 280px;height: 380px ;margin-bottom:20px">
   <!-- Card image -->
-  <img class="card-img-top" src="/static/images/{{ rate_project.images.first }}" alt="Card image cap" width="270" height="200">
+  <img class="card-img-top" src="/static/images/{{ rate_project.images.first }}" alt="No image" width="270" height="200">
   <!-- Card content -->
   <div class="card-body">
 
@@ -64,14 +84,14 @@
 </div>
 
 <div class="content" style="text-align: center; margin:30px 0; color:rgb(73, 145, 151); font-size: larger; font-weight:bolder;">
-    <h1 style="background-color: darkgray;color: white;">The 5 featured projects </h1>
+    <h1 style="background-color: darkgray;color: white;">The latest featured projects </h1>
 </div>
 <div class="container-fluid" style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap">
     <!-- Card -->
  {% for feature_project in featured_projects %}
- <div class="card" style="width: 280px;height: 380px">
+ <div class="card" style="width: 280px;height: 380px; margin-bottom:20px">
   <!-- Card image -->
-  <img class="card-img-top" src="/static/images/{{ feature_project.project.images.first }}" alt="Card image cap" width="270" height="200">
+  <img class="card-img-top" src="/static/images/{{ feature_project.project.images.first }}" alt="No image" width="270" height="200">
   <!-- Card content -->
   <div class="card-body">
 
