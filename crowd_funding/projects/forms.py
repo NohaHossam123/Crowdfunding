@@ -70,5 +70,5 @@ class ProjectForm(forms.ModelForm):
                 start_date = self.cleaned_data['start_date']
                 print("Date = ",end_date)
                 if (end_date-start_date).days <= 0:
-                    raise forms.ValidationError("end date must be after start Date")
+                    raise forms.ValidationError("Wrong End Date")
                 return end_date
