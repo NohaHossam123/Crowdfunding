@@ -211,7 +211,7 @@
                             </div>
 
                             {% empty %}
-                            <h2 style="text-align: center;margin-top: 30px">You do not have projects for now!</h2>
+                            <h2 style="margin-left: 180px;margin-top: 30px">You do not have projects for now!</h2>
                         {% endfor %}
                 </div>
             </div>
@@ -231,12 +231,12 @@
                         </a>
                         <div class="w3-container w3-center">
                             <span>Target: ${{ project.total_target }} </span>
-{#                            <span>Current: ${{ total_donate }} </span>#}
+                            <span>Current: ${{ total_donate }} </span>
                         </div>
                         </div>
 
                         {% empty %}
-                        <h2 style="text-align: center;margin-top: 30px"> Currently you don't have any donations !</h2>
+                        <h2 style="margin-left: 140px;margin-top: 30px"> Currently you don't have any donations !</h2>
                     {% endfor %}
             </div>
         </div>
