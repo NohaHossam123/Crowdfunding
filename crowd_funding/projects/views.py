@@ -69,7 +69,7 @@ def listprojects(request):
     return render(request, "allprojects.html", context)
 
 def project(request, id):
-    project = Project.objects.get(id=id,end_date__gte= datetime.datetime.now())
+    project = Project.objects.get(id=id)
     total_donate = 0
     donates = project.donations.only("amount")
     for d in donates:
