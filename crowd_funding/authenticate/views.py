@@ -12,30 +12,20 @@ from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user
 from django.db.models import Q
 from projects.models import *
+from django.db.models import Sum
 # Create your views here.
 
 
-# @login_required(login_url='login')
 def home_page(request):
-    # project_end_date = Project.objects.all()
-    # end_date = project_end_date[0].end_date
-    # now = timezone.now()
-    # query = end < now
-    latest_projects = Project.objects.order_by("-id")[:5]
-    featured_projects = Project.objects.order_by("-id")[:5]
-    project_end_date = Project.objects.all()
-    end_date = project_end_date[0].end_date
-    now = timezone.now()
-    if end_date < now:
-        heigest_rate_projects = Rate.objects.order_by("-body")[:5]
-        context = {
-            "heighest_rate_projects": heigest_rate_projects,
-        }
+
+    latest_projects = Project.objects.all().order_by("-id")[:5]
+    featured_projects = SelectedToShow.objects.order_by("-id")[:5]
     category_result = Category.objects.all()
-    project_picture = ProjectPictures.objects.all()
+    heigest_rate_projects = Project.objects.raw('SELECT * ,(SELECT sum(body)/count(*) from projects_rate WHERE projects_project.id=projects_rate.project_id)as total from projects_project where end_date > CURDATE() ORDER by total DESC LIMIT 5 ')
     context = {
-        "latest_projects":latest_projects,
-        "category_result":category_result,
+        "latest_projects": latest_projects,
+        "heigest_rate_projects": heigest_rate_projects,
+        "category_result": category_result,
         "featured_projects":featured_projects
     }
     return render(request, 'home.html', context)
@@ -159,13 +149,13 @@ def delete_profile(request):
         request.user.delete()
     return redirect('login')
 
-
+@login_required(login_url='login')
 def projects_view(request, id):
     projects = Project.objects.filter(category_id=id)
     list_projects = {"projects":projects}
     return render(request, "show_projects.html",list_projects)
 
-
+@login_required(login_url='login')
 def search(request):
     query = request.GET.get('q')
     if query:

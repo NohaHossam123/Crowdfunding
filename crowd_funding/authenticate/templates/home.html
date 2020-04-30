@@ -3,110 +3,94 @@
     <div class="alert alert-success">{{ message }}</div>
 {% endfor %}
 {% block content %}
-    <div class="col-sm-6">
-            <div class="search">
-                <form class="form-inline active-purple-3 active-purple-4" action="{% url 'search' %}" method="get">
-                    {% csrf_token %}
-                    <input type="text" placeholder="Search by title or tage.."
-                    aria-label="Search" name="q" value = "{{ request.GET.q }}" class="form-control">
-                    <button type="submit" class="btn btn-secondary" id="search">Search</button>
-                </form>
-            </div>
-        </div>
-        <div class="btn-group">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Categories
-            </button>
-            <div class="dropdown-menu">
-              {% for category in category_result %}
-              <a class="dropdown-item" href="{% url 'show_projects' category.id %}">{{ category.name }}</a>
-              {% endfor %}
-            </div>
-          </div>
-    <div class="content">
-        <h2>The latest 5 projects </h2>
-    </div>
-    <div class="cards-list">
-    {% for project in latest_projects %}
-        <a href="{% url 'login' %}">
-            <div class="card" style="width:28em;height:50em;padding:1em;">
-                <div class="card_image">
-                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
-                        {% for picture in project.images.all %}
-                        {%if  forloop.counter == 1 %}
-                            <div class="carousel-item active">
-                        {% else %}
-                            <div class="carousel-item">
-                        {% endif %}
-                            <img src="/static/images/{{ picture.image_path }}" height="80px" width="310" alt="Not found">
-                        </div>
-                    {% endfor %}
-                        </div>
-                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
-                </div>
-                </div>
-                <div class="card_title title-black">
-                    <h4><span>Category: </span>{{ project.category.name }}</h4>
-                </div>
-                <div class="card_title title-black">
-                <h4><span>Total target: </span>{{ project.total_target }}</h4>
-                </div>
-                <div class="card_title title-black">
-                    <h4><span>End date:</span>{{ project.end_date }}</h4>
-                </div>
-                <div class="card_title title-black">
-                    <h4><span>Start date: </span>{{ project.start_date }} </h4>
-                </div>
-                <div class="card_title title-black">
-                    <h4><span>Details: </span>{{ project.details }}</h4>
-                </div>
-                <div class="card_title title-black">
-                    <h4><span>Title: </span>{{ project.title }} </h4>
-                </div>
-                
-            </div>
-        </a>
-    {% endfor %}
+<div class="content" style="text-align: center; margin:30px 0; color:rgb(73, 145, 151); font-size: larger; font-weight:bolder;">
+    <h1 style="background-color: darkgray;color: white;">The latest 5 projects </h1>
 </div>
-<div class="heighest">
-    <h2>The heighest 5 rating projects </h2>
+<div class="container-fluid" style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap">
+    <!-- Card -->
+{% for project in latest_projects %}
+<div class="card" style="width: 280px;height: 380px">
+  <!-- Card image -->
+  <img class="card-img-top" src="/static/images/{{ project.images.first}}" alt="Card image cap" width="270" height="200">
+  <!-- Card content -->
+  <div class="card-body">
+
+    <!-- Title -->
+
+    <h4 class="card-title"><a>Title: {{ project.title }}</a></h4>
+    <!-- Text -->
+    <p class="card-text">
+    <p>Details: {{ project.details }}</p>
+    <a href="/project/{{ project.id}}" class="orange-text d-flex flex-row-reverse p-2">
+        <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i></h5>
+    </a>
+    </p>
 </div>
-<div class="row">
-    {% for rate_project in heighest_rate_projects %}
-        <div class="card"> 
-            <h5><span>Title: </span>{{ rate_project.project.title }} </h5>
-            <h5><span>Details: </span>{{ rate_project.project.details }} </h5>
-            <h5><span>Start date: </span>{{ rate_project.project.start_date }} </h5>
-            <h5><span>End date: </span>{{ rate_project.project.end_date }} </h5>
-            <h5><span>Total target: </span>{{ rate_project.project.total_target }}</h5>
-            <h5><span>Category: </span>{{ rate_project.project.category.name }}</h5>
-        </div>
-    {% endfor %}
 </div>
-<div class="heighest">
-    <h2>The feature 5  projects </h2>
+<!-- Card -->
+{% empty %}
+<h2 style="margin-left: 271px;">currently there is no projects..</h2>
+{% endfor %}
 </div>
-<div class="row">
-    {% for feature_project in featured_projects %}
-        <div class="card"> 
-            <h5><span>Title: </span>{{ feature_project.title }} </h5>
-            <h5><span>Details: </span>{{ feature_project.details }} </h5>
-            <h5><span>Start date: </span>{{ feature_project.start_date }} </h5>
-            <h5><span>End date: </span>{{ feature_project.end_date }} </h5>
-            <h5><span>Total target: </span>{{ feature_project.total_target }}</h5>
-            <h5><span>Category: </span>{{ feature_project.category.name }}</h5>
-        </div>
-    {% endfor %}
+
+<div class="content" style="text-align: center; margin:30px 0; color:rgb(73, 145, 151); font-size: larger; font-weight:bolder;">
+    <h1 style="background-color: darkgray;color: white;">The heighest 5 running projects </h1>
 </div>
+<div class="container-fluid" style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap">
+    <!-- Card -->
+{% for rate_project in heigest_rate_projects %}
+<div class="card" style="width: 280px;height: 380px">
+  <!-- Card image -->
+  <img class="card-img-top" src="/static/images/{{ rate_project.images.first }}" alt="Card image cap" width="270" height="200">
+  <!-- Card content -->
+  <div class="card-body">
+
+    <!-- Title -->
+
+    <h4 class="card-title"><a>Title: {{ rate_project.title }}</a></h4>
+    <!-- Text -->
+    <p class="card-text">
+    <p>Details: {{ rate_project.details }}</p>
+    <a href="/project/{{ project.id}}" class="orange-text d-flex flex-row-reverse p-2">
+        <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i></h5>
+    </a>
+    </p>
+</div>
+</div>
+<!-- Card -->
+{% empty %}
+<h2 style="margin-left: 271px;">currently there is no rated projects yet..</h2>
+{% endfor %}
+</div>
+
+<div class="content" style="text-align: center; margin:30px 0; color:rgb(73, 145, 151); font-size: larger; font-weight:bolder;">
+    <h1 style="background-color: darkgray;color: white;">The 5 featured projects </h1>
+</div>
+<div class="container-fluid" style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap">
+    <!-- Card -->
+ {% for feature_project in featured_projects %}
+ <div class="card" style="width: 280px;height: 380px">
+  <!-- Card image -->
+  <img class="card-img-top" src="/static/images/{{ feature_project.project.images.first }}" alt="Card image cap" width="270" height="200">
+  <!-- Card content -->
+  <div class="card-body">
+
+    <!-- Title -->
+
+    <h4 class="card-title"><a>Title: {{ feature_project.project.title }}</a></h4>
+    <!-- Text -->
+    <p class="card-text">
+    <p>Details: {{ feature_project.project.details }}</p>
+    <a href="/project/{{ project.id}}" class="orange-text d-flex flex-row-reverse p-2">
+        <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i></h5>
+    </a>
+    </p>
+</div>
+</div>
+<!-- Card -->
+{% empty %}
+<h2 style="margin-left: 271px;">currently there is no featured projects yet..</h2>
+{% endfor %}
+</div>
+
 {% endblock %}
-</body>
-</html>
