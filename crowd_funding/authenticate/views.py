@@ -13,22 +13,26 @@ from .decorators import unauthenticated_user
 from django.db.models import Q
 from projects.models import *
 from django.db.models import Sum
+
+
 # Create your views here.
+# from ..projects.models import Project
 
 
 def home_page(request):
-
     latest_projects = Project.objects.all().order_by("-id")[:5]
     featured_projects = SelectedToShow.objects.order_by("-id")[:5]
     category_result = Category.objects.all()
-    heigest_rate_projects = Project.objects.raw('SELECT * ,(SELECT sum(body)/count(*) from projects_rate WHERE projects_project.id=projects_rate.project_id)as total from projects_project where end_date > CURDATE() ORDER by total DESC LIMIT 5 ')
+    heigest_rate_projects = Project.objects.raw(
+        'SELECT * ,(SELECT sum(body)/count(*) from projects_rate WHERE projects_project.id=projects_rate.project_id)as total from projects_project where end_date > CURDATE() ORDER by total DESC LIMIT 5 ')
     context = {
         "latest_projects": latest_projects,
         "heigest_rate_projects": heigest_rate_projects,
         "category_result": category_result,
-        "featured_projects":featured_projects
+        "featured_projects": featured_projects
     }
     return render(request, 'home.html', context)
+
 
 @unauthenticated_user
 def register_page(request):
@@ -101,12 +105,12 @@ def account_view(request):
         return redirect('login')
     context = {}
     user_project = Project.objects.filter(user=request.user)
+    donations = Project.objects.filter(donations__user=request.user)
     project = Project.objects.get(id=request.user.id)
     donate = project.donations.only("amount")
     total_donate = 0
     for d in donate:
         total_donate += float(str(d))
-    donations = Project.objects.filter(donations__user=request.user)
     if request.method == 'POST':
         form = AccountUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -149,17 +153,20 @@ def delete_profile(request):
         request.user.delete()
     return redirect('login')
 
+
 @login_required(login_url='login')
 def projects_view(request, id):
     projects = Project.objects.filter(category_id=id)
-    list_projects = {"projects":projects}
-    return render(request, "show_projects.html",list_projects)
+    list_projects = {"projects": projects}
+    return render(request, "show_projects.html", list_projects)
+
 
 def search(request):
     query = request.GET.get('q')
     if query:
         title_results = Project.objects.filter(Q(title__icontains=query))
         tag_results = Tag.objects.filter(Q(name__icontains=query))
+<<<<<<< HEAD
         # tag_projects = Tag_projects.objects.filter(tag_id=tag_results.id)
         # if not title_results:
         #     messages.error(request, 'no result found')
@@ -171,10 +178,19 @@ def search(request):
             # "tag_projects":tag_projects
         }
         return render(request,'search.html', context)        
+=======
+        context = {
+            "title_results": title_results,
+            "tag_results": tag_results,
+        }
+        return render(request, 'search.html', context)
+    elif not query:
+        messages.error(request, 'no result found')
+>>>>>>> cd99cc016d73813727fc89f01912c58f3a52b2dc
     else:
         projects = Project.objects.all()
-        context={
-            "projects":projects
+        context = {
+            "projects": projects
         }
-        return render(request,'search.html', context)
-    return render(request,'search.html')
+        return render(request, 'search.html', context)
+    return render(request, 'search.html')

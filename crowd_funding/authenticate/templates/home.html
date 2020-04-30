@@ -1,7 +1,4 @@
 {% extends 'layout.html' %}
-{% for message in messages %}
-    <div class="alert alert-success">{{ message }}</div>
-{% endfor %}
 {% block content %}
 <div class="col-lg-6" style="display: flex; justify-content: space-between; margin: 1em">
     <div class="search">
@@ -35,23 +32,24 @@
   <!-- Card content -->
   <div class="card-body">
 
-    <!-- Title -->
+                    <!-- Title -->
 
-    <h4 class="card-title"><a>Title: {{ project.title }}</a></h4>
-    <!-- Text -->
-    <p class="card-text">
-    <p>Details: {{ project.details }}</p>
-    <a href="/project/{{ project.id}}" class="orange-text d-flex flex-row-reverse p-2">
-        <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i></h5>
-    </a>
-    </p>
-</div>
-</div>
-<!-- Card -->
-{% empty %}
-<h2 syle="text-align:center">currently there is no projects..</h2>
-{% endfor %}
-</div>
+                    <h4 class="card-title"><a>Title: {{ project.title }}</a></h4>
+                    <!-- Text -->
+                    <p class="card-text">
+                    <p>Details: {{ project.details }}</p>
+                    <a href="/project/{{ project.id }}" class="orange-text d-flex flex-row-reverse p-2">
+                        <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i>
+                        </h5>
+                    </a>
+                    </p>
+                </div>
+            </div>
+            <!-- Card -->
+            {% empty %}
+            <h2 style="margin-left: 271px;">currently there is no projects..</h2>
+        {% endfor %}
+    </div>
 
 <div class="content" style="text-align: center; margin:30px 0; color:rgb(73, 145, 151); font-size: larger; font-weight:bolder;">
     <h1 style="background-color: darkgray;color: white;">The heighest rating running projects </h1>
@@ -65,23 +63,24 @@
   <!-- Card content -->
   <div class="card-body">
 
-    <!-- Title -->
+                    <!-- Title -->
 
-    <h4 class="card-title"><a>Title: {{ rate_project.title }}</a></h4>
-    <!-- Text -->
-    <p class="card-text">
-    <p>Details: {{ rate_project.details }}</p>
-    <a href="/project/{{ project.id}}" class="orange-text d-flex flex-row-reverse p-2">
-        <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i></h5>
-    </a>
-    </p>
-</div>
-</div>
-<!-- Card -->
-{% empty %}
-<h2 syle="text-align:center">currently there is no rated projects yet..</h2>
-{% endfor %}
-</div>
+                    <h4 class="card-title"><a>Title: {{ rate_project.title }}</a></h4>
+                    <!-- Text -->
+                    <p class="card-text">
+                    <p>Details: {{ rate_project.details }}</p>
+                    <a href="/project/{{ project.id }}" class="orange-text d-flex flex-row-reverse p-2">
+                        <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i>
+                        </h5>
+                    </a>
+                    </p>
+                </div>
+            </div>
+            <!-- Card -->
+            {% empty %}
+            <h2 style="margin-left: 271px;">currently there is no rated projects yet..</h2>
+        {% endfor %}
+    </div>
 
 <div class="content" style="text-align: center; margin:30px 0; color:rgb(73, 145, 151); font-size: larger; font-weight:bolder;">
     <h1 style="background-color: darkgray;color: white;">The latest featured projects </h1>
@@ -95,22 +94,23 @@
   <!-- Card content -->
   <div class="card-body">
 
-    <!-- Title -->
+                    <!-- Title -->
 
-    <h4 class="card-title"><a>Title: {{ feature_project.project.title }}</a></h4>
-    <!-- Text -->
-    <p class="card-text">
-    <p>Details: {{ feature_project.project.details }}</p>
-    <a href="/project/{{ project.id}}" class="orange-text d-flex flex-row-reverse p-2">
-        <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i></h5>
-    </a>
-    </p>
-</div>
-</div>
-<!-- Card -->
-{% empty %}
-<h2 syle="text-align:center">currently there is no featured projects yet..</h2>
-{% endfor %}
-</div>
+                    <h4 class="card-title"><a>Title: {{ feature_project.project.title }}</a></h4>
+                    <!-- Text -->
+                    <p class="card-text">
+                    <p>Details: {{ feature_project.project.details }}</p>
+                    <a href="/project/{{ project.id }}" class="orange-text d-flex flex-row-reverse p-2">
+                        <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i>
+                        </h5>
+                    </a>
+                    </p>
+                </div>
+            </div>
+            <!-- Card -->
+            {% empty %}
+            <h2 style="margin-left: 271px;">currently there is no featured projects yet..</h2>
+        {% endfor %}
+    </div>
 
 {% endblock %}

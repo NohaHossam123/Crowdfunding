@@ -12,8 +12,7 @@
 {% endif %}
 
 {% load mathfilters %}
-<strong>Poject name:</strong>{{project.title}}
-{{totalRate}}
+<strong>Poject name:  </strong>{{project.title}}
 <div class="star-rating">
             {% for i in '54321'%}
             {% if i|add:0 <= totalRate %}
@@ -32,13 +31,32 @@
 {%if totalDonate <= project.total_target %}
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#donate" data-whatever="@fat">donate</button>
 {% endif %}
+
+{%if request.user.id == project.user.id %}
 {%if totalDonate <= project.total_target|div:4 %}
   <a href="/project/cancel/{{project.id}}" type="submit" class="btn btn-danger">cancel</a>      
 {% endif %}
-
-
-
+{% endif %}
 <br><br>
+<div class="text-center">
+  <h4 style="margin:0; padding: 0;"><strong>Rate the Project</strong></h4>
+  <div class="star-rating">
+      <form action={% url 'rate_project' project.id %} id="rate_form" method="POST">
+            {% csrf_token %}
+            {% for i in '54321'%}
+            <input id="star-{{i}}" type="radio" name="rating" value="{{i}}"
+            {% if i|add:0 == user_rate %} checked {% endif %}/>
+            <label for="star-{{i}}" title="{{i}} star">
+              <i class="active fa fa-star" aria-hidden="true"></i>
+            </label>
+            {% endfor%}
+            <input id="star-0" type="radio" name="rating" value="0" />
+            <label for="star-0" title="0 star">
+              <i class="active fa fa-star vs" aria-hidden="true"></i>
+            </label>  
+      </form>
+    </div>
+  </div>
 <div class="container">
     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
     <div class="carousel-inner">
@@ -75,25 +93,7 @@
 <div class="container">
 
 <!-- rate project -->
-<div class="text-center">
-  <h4>Rate the Project</h4>
-  <div class="star-rating">
-      <form action={% url 'rate_project' project.id %} id="rate_form" method="POST">
-            {% csrf_token %}
-            {% for i in '54321'%}
-            <input id="star-{{i}}" type="radio" name="rating" value="{{i}}"
-            {% if i|add:0 == user_rate %} checked {% endif %}/>
-            <label for="star-{{i}}" title="{{i}} star">
-              <i class="active fa fa-star" aria-hidden="true"></i>
-            </label>
-            {% endfor%}
-            <input id="star-0" type="radio" name="rating" value="0" />
-            <label for="star-0" title="0 star">
-              <i class="active fa fa-star vs" aria-hidden="true"></i>
-            </label>  
-      </form>
-    </div>
-  </div>
+
 <div class="container-sm">
     <!-- comment -->
   <h5>Comments</h5>
@@ -163,13 +163,37 @@
   </div>
   <!-- text model -->
 
-{% for project in relatedProjects %}
+{% comment %} {% for project in relatedProjects %}
     <h1><a href="{%url 'project' project.id %}">{{project.title}}</a></h1>
     {% endfor %}
-    <br><br><br><br>
+    <br><br><br><br> {% endcomment %}
+<br><br><br><br>
+<div class="container-fluid" style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap">
+    <!-- Card -->
+  {% for rate_project in relatedProjects %}
+  <div class="card" style="width: 230px;height: 380px">
+    <!-- Card image -->
+    <img class="card-img-top" src="/static/images/{{ rate_project.images.first }}" alt="Card image cap" width="270" height="200">
+    <!-- Card content -->
+    <div class="card-body">
 
+      <!-- Title -->
 
-
+      <h4 class="card-title"><a>Title: {{ rate_project.title }}</a></h4>
+      <!-- Text -->
+      <p class="card-text">
+      <p>Details: {{ rate_project.details }}</p>
+      <a href="/project/{{rate_project.id}}" class="orange-text d-flex flex-row-reverse p-2">
+          <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i></h5>
+      </a>
+      </p>
+  </div>
+  </div>
+  <!-- Card -->
+  {% empty %}
+  <h2 style="margin-left: 271px;">currently there is no rated projects yet..</h2>
+  {% endfor %}
+</div>
 
 
 
