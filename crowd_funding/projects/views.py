@@ -198,7 +198,7 @@ def report_comment(request, id):
                 messages.error(request, "Report cannot be empty, Try again!")
             else:    
                 ReportComment.objects.create(user_id=user_id,comment_id=id, body=body)
-		messages.info(request, " We've received your report and we\'re working on it.")
+                messages.info(request, " We've received your report and we\'re working on it.")
                 messages.info(request, "Please keep in mind that reporting something does not guarantee that it will be removed")
     except:
         messages.error(request, "You reported this comment before!we\'re working on it.")
