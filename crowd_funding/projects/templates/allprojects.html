@@ -1,19 +1,34 @@
-<!DOCTYPE html>
-<html>
 
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Projects</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-</head>
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-5">
+<h1> all projects</h1>
+<div class="container-fluid" style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap">
+    <!-- Card -->
+  {% for rate_project in projects %}
+  <div class="card mt-5" style="width: 230px;height: 380px">
+    <!-- Card image -->
+    <img class="card-img-top" src="/static/images/{{ rate_project.images.first }}" alt="Card image cap" width="270" height="200">
+    <!-- Card content -->
+    <div class="card-body">
 
-<body>
-    {% for project in projects %}
-    <h1><a href="{%url 'project' project.id %}">{{project.title}}</a></h1>
-    {% endfor %}
-    <br><br><br><br>
-    <h2><a href="{%url 'create_project'%}">ADD NEW project</a></h2>
-</body>
+      <!-- Title -->
 
-</html>
+      <h4 class="card-title"><a>Title: {{ rate_project.title }}</a></h4>
+      <!-- Text -->
+      <p class="card-text">
+      <p>Details: {{ rate_project.details }}</p>
+      <a href="/project/{{rate_project.id}}" class="orange-text d-flex flex-row-reverse p-2">
+          <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i></h5>
+      </a>
+      </p>
+  </div>
+  </div>
+  <!-- Card -->
+  {% empty %}
+  <h2 style="margin-left: 271px;">currently there is no rated projects yet..</h2>
+  {% endfor %}
+</div>
+</div>
+
+{% endblock %}

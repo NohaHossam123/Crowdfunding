@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from authenticate.decorators import unauthenticated_user
 from django.contrib import messages
 import datetime
+import re
 
 # Create your views here.
 
@@ -49,51 +50,59 @@ def listprojects(request):
     return render(request, "allprojects.html", context)
 
 def project(request, id):
-    project = Project.objects.get(id=id,end_date__gte= datetime.datetime.now())
-    total_donate = 0
-    donates = project.donations.only("amount")
-    for d in donates:
-        total_donate += float(str(d))
-    rate = project.rate_set.only("body")
-    average = 0
-    totalRate=0
-    for r in rate:
-        average += int(str(r))
-    if len(rate) != 0:
-        average = average / len(rate)
-        totalRate=round(average)
-    else:
+    try:
+        project = Project.objects.get(id=id)
+        total_donate = 0
+        donates = project.donations.only("amount")
+        for d in donates:
+            total_donate += float(str(d))
+        rate = project.rate_set.only("body")
         average = 0
-    try:
-        user_rate = project.rate_set.get(user_id=request.user.id).body
+        totalRate=0
+        for r in rate:
+            average += int(str(r))
+        if len(rate) != 0:
+            average = average / len(rate)
+            totalRate=round(average)
+        else:
+            average = 0
+        try:
+            user_rate = project.rate_set.get(user_id=request.user.id).body
+        except:
+            user_rate = 0
+        try:
+            report = ReportProject.objects.get(project=project, user=request.user)
+        except:
+            report=""
+        
+        relatedProjects=Project.objects.raw('select *,count(title) as r from projects_project as p RIGHT JOIN projects_tag_projects on project_id where projects_tag_projects.tag_id in (select tp.tag_id from projects_tag_projects as tp where tp.project_id=p.id) and p.id <> %s GROUP BY title ORDER by r DESC LIMIT 4',[id])
+
+        context = {"project": project, "totalRate": totalRate   ,
+                "totalDonate": total_donate, 
+                "report": report,
+                "relatedProjects": relatedProjects,
+                "user_rate": user_rate
+                }
+        return render(request, "project.html", context)
     except:
-        user_rate = 0
-    try:
-        report = ReportProject.objects.get(project=project, user=request.user)
-    except:
-        report=""
-    
-    relatedProjects=Project.objects.raw('SELECT *,count(title) as r from projects_project as p RIGHT JOIN projects_tag_projects on project_id where projects_tag_projects.tag_id in (select tp.tag_id from projects_tag_projects as tp where tp.project_id=p.id) GROUP BY title ORDER by r DESC LIMIT 4')
+        return redirect("/")
 
-    context = {"project": project, "totalRate": totalRate   ,
-               "totalDonate": total_donate, 
-               "report": report,
-               "relatedProjects": relatedProjects,
-               "user_rate": user_rate
-               }
-    return render(request, "project.html", context)
-
-
+@login_required(login_url='login')
 def adddonate(request, id):
-    if request.method.lower() == "post":
-        newdonate = Donate()
-        newdonate.amount = request.POST['amount']
-        newdonate.project = Project.objects.get(id=id)
-        newdonate.user = request.user
-        newdonate.save()
-        return redirect(f'/project/{id}')
+    try:
+        if request.method.lower() == "post":
+            if(re.match("(^[0-9]*(.)?[0-9]+$)",request.POST['amount'])):
+                newdonate = Donate()
+                newdonate.amount = request.POST['amount']
+                newdonate.project = Project.objects.get(id=id)
+                newdonate.user = request.user
+                newdonate.save()
+                return redirect(f'/project/{id}')
+    except:
+        pass
+    return redirect('project', id)
 
-
+@login_required(login_url='login')
 def addreport(request, id):
     if request.method.lower() == "post":
         try:
@@ -171,7 +180,7 @@ def report_comment(request, id):
                 messages.info(request, " We've received your report and we\'re working on it.")
                 messages.info(request, "Please keep in mind that reporting something does not guarantee that it will be removed")
     except:
-        messages.error(request, "You reported this comment before! we\'re working on it.")
+        messages.error(request, "You reported this comment before!we\'re working on it.")
     return redirect('project', project_id)
 
 @login_required(login_url='login')
@@ -196,7 +205,7 @@ def rate_project(request, id):
             rate = int(request.POST.get('rating'))
             Rate.objects.create(user_id=user_id, project_id=id, body=rate)
     except:
-        rate = Rate.objects.get(user_id= request.user.id, project_id=id)
+        rate = Rate.objects.get(user_id= request.user.id,project_id=id)
         rate.body = int(request.POST.get('rating')) 
         rate.save()
     return redirect('project', id)
