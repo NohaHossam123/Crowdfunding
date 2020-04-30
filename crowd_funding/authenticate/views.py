@@ -13,22 +13,26 @@ from .decorators import unauthenticated_user
 from django.db.models import Q
 from projects.models import *
 from django.db.models import Sum
+
+
 # Create your views here.
+# from ..projects.models import Project
 
 
 def home_page(request):
-
     latest_projects = Project.objects.all().order_by("-id")[:5]
     featured_projects = SelectedToShow.objects.order_by("-id")[:5]
     category_result = Category.objects.all()
-    heigest_rate_projects = Project.objects.raw('SELECT * ,(SELECT sum(body)/count(*) from projects_rate WHERE projects_project.id=projects_rate.project_id)as total from projects_project where end_date > CURDATE() ORDER by total DESC LIMIT 5 ')
+    heigest_rate_projects = Project.objects.raw(
+        'SELECT * ,(SELECT sum(body)/count(*) from projects_rate WHERE projects_project.id=projects_rate.project_id)as total from projects_project where end_date > CURDATE() ORDER by total DESC LIMIT 5 ')
     context = {
         "latest_projects": latest_projects,
         "heigest_rate_projects": heigest_rate_projects,
         "category_result": category_result,
-        "featured_projects":featured_projects
+        "featured_projects": featured_projects
     }
     return render(request, 'home.html', context)
+
 
 @unauthenticated_user
 def register_page(request):
@@ -101,11 +105,11 @@ def account_view(request):
         return redirect('login')
     context = {}
     user_project = Project.objects.filter(user=request.user)
-    project = Project.objects.get(id=request.user.id)
-    donate = project.donations.only("amount")
-    total_donate = 0
-    for d in donate:
-        total_donate += float(str(d))
+    # project = Project.objects.get(user=request.user)
+    # donate = project.donations.only("amount")
+    # total_donate = 0
+    # for d in donate:
+    #     total_donate += float(str(d))
     donations = Project.objects.filter(donations__user=request.user)
     if request.method == 'POST':
         form = AccountUpdateForm(request.POST, request.FILES, instance=request.user)
@@ -138,7 +142,7 @@ def account_view(request):
     context['user_project'] = user_project
     context['donations'] = donations
     context['account_form'] = form
-    context['total_donate'] = total_donate
+    # context['total_donate'] = total_donate
     context['email'] = request.user
     return render(request, 'profile.html', context)
 
@@ -149,11 +153,13 @@ def delete_profile(request):
         request.user.delete()
     return redirect('login')
 
+
 @login_required(login_url='login')
 def projects_view(request, id):
     projects = Project.objects.filter(category_id=id)
-    list_projects = {"projects":projects}
-    return render(request, "show_projects.html",list_projects)
+    list_projects = {"projects": projects}
+    return render(request, "show_projects.html", list_projects)
+
 
 @login_required(login_url='login')
 def search(request):
@@ -161,17 +167,17 @@ def search(request):
     if query:
         title_results = Project.objects.filter(Q(title__icontains=query))
         tag_results = Tag.objects.filter(Q(name__icontains=query))
-        context={
-            "title_results":title_results,
-            "tag_results":tag_results,
+        context = {
+            "title_results": title_results,
+            "tag_results": tag_results,
         }
-        return render(request,'search.html', context)
+        return render(request, 'search.html', context)
     elif not query:
         messages.error(request, 'no result found')
     else:
         projects = Project.objects.all()
-        context={
-            "projects":projects
+        context = {
+            "projects": projects
         }
-        return render(request,'search.html', context)
-    return render(request,'search.html')
+        return render(request, 'search.html', context)
+    return render(request, 'search.html')
