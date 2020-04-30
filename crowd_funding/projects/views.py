@@ -5,6 +5,7 @@ from .forms import ProjectForm
 from django.contrib.auth.decorators import login_required
 from authenticate.decorators import unauthenticated_user
 from django.contrib import messages
+import datetime
 
 # Create your views here.
 
@@ -68,7 +69,7 @@ def listprojects(request):
     return render(request, "allprojects.html", context)
 
 def project(request, id):
-    project = Project.objects.get(id=id)
+    project = Project.objects.get(id=id,end_date__gte= datetime.datetime.now())
     total_donate = 0
     donates = project.donations.only("amount")
     for d in donates:

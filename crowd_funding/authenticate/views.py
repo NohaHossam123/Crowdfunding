@@ -15,7 +15,7 @@ from projects.models import *
 # Create your views here.
 
 
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def home_page(request):
     # project_end_date = Project.objects.all()
     # end_date = project_end_date[0].end_date
@@ -64,7 +64,7 @@ def register_page(request):
             username = form.cleaned_data.get('username')
             messages.success(request,
                              f'Wonderful {username}, account has been created!, kindly check your email address to activate your account')
-            return redirect('login')
+            return redirect('home')
     else:
         form = UserRegisterationForm()
     return render(request, 'register.html', {'form': form})
