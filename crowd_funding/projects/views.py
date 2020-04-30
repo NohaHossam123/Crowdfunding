@@ -5,6 +5,7 @@ from .forms import ProjectForm
 from django.contrib.auth.decorators import login_required
 from authenticate.decorators import unauthenticated_user
 from django.contrib import messages
+from django.views.decorators.http import require_http_methods
 
 # Create your views here.
 
@@ -31,17 +32,18 @@ def project_create_view(request):
                 instance.save()
    
     # get tags
-    fetched = request.POST.get('tags').split(',')
+    fetched = request.POST.get('tags')
     if fetched is not None:
-        for i in fetched:
+        new_tags = fetched.split(',')
+        for i in new_tags:
             obj, created = Tag.objects.get_or_create(name=i)
             project.tag_projects_set.create(tag=obj)
-        # new_tags = fetched.split(',')
-        # saved_tags = list(Tag.objects.all())
-        # saved_tags_data = [tag.name for tag in saved_tags]
-        # new_unique_tags = [tag for tag in new_tags if tag not in saved_tags_data]
-        # print(new_tags)
-        # print(len (new_unique_tags))
+            # new_tags = fetched.split(',')
+            # saved_tags = list(Tag.objects.all())
+            # saved_tags_data = [tag.name for tag in saved_tags]
+            # new_unique_tags = [tag for tag in new_tags if tag not in saved_tags_data]
+            # print(new_tags)
+            # print(len (new_unique_tags))
         
 
 
