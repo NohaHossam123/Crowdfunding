@@ -39,28 +39,7 @@ def project_create_view(request):
         for i in new_tags:
             obj, created = Tag.objects.get_or_create(name=i)
             project.tag_projects_set.create(tag=obj)
-        # new_tags = fetched.split(',')
-        # saved_tags = list(Tag.objects.all())
-        # saved_tags_data = [tag.name for tag in saved_tags]
-        # new_unique_tags = [tag for tag in new_tags if tag not in saved_tags_data]
-        # print(new_tags)
-        # print(len (new_unique_tags))
-        
-
-
-    #     #check for comming new unique tags
-    #     if len (new_unique_tags) != 0:
-    #         # insert in project-tags Only
-    #         for value in new_unique_tags:
-    #                 instance = Tag(name= value)
-    #                 instance.save()
-                    
-    # for tag in new_tags:
-    #      instance = Tag_projects(
-    #                 project=project,
-    #                 image_path=file
-    #             )
-    #             instance.save()
+            return redirect('/')
 
     return render(request, "project_create.html",context)
 
