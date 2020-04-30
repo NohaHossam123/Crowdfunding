@@ -70,39 +70,42 @@ def listprojects(request):
     return render(request, "allprojects.html", context)
 
 def project(request, id):
-    project = Project.objects.get(id=id)
-    total_donate = 0
-    donates = project.donations.only("amount")
-    for d in donates:
-        total_donate += float(str(d))
-    rate = project.rate_set.only("body")
-    average = 0
-    totalRate=0
-    for r in rate:
-        average += int(str(r))
-    if len(rate) != 0:
-        average = average / len(rate)
-        totalRate=round(average)
-    else:
+    try:
+        project = Project.objects.get(id=id)
+        total_donate = 0
+        donates = project.donations.only("amount")
+        for d in donates:
+            total_donate += float(str(d))
+        rate = project.rate_set.only("body")
         average = 0
-    try:
-        user_rate = project.rate_set.get(user_id=request.user.id).body
-    except:
-        user_rate = 0
-    try:
-        report = ReportProject.objects.get(project=project, user=request.user)
-    except:
-        report=""
-    
-    relatedProjects=Project.objects.raw('select *,count(title) as r from projects_project as p RIGHT JOIN projects_tag_projects on project_id where projects_tag_projects.tag_id in (select tp.tag_id from projects_tag_projects as tp where tp.project_id=p.id) and p.id <> %s GROUP BY title ORDER by r DESC LIMIT 4',[id])
+        totalRate=0
+        for r in rate:
+            average += int(str(r))
+        if len(rate) != 0:
+            average = average / len(rate)
+            totalRate=round(average)
+        else:
+            average = 0
+        try:
+            user_rate = project.rate_set.get(user_id=request.user.id).body
+        except:
+            user_rate = 0
+        try:
+            report = ReportProject.objects.get(project=project, user=request.user)
+        except:
+            report=""
+        
+        relatedProjects=Project.objects.raw('select *,count(title) as r from projects_project as p RIGHT JOIN projects_tag_projects on project_id where projects_tag_projects.tag_id in (select tp.tag_id from projects_tag_projects as tp where tp.project_id=p.id) and p.id <> %s GROUP BY title ORDER by r DESC LIMIT 4',[id])
 
-    context = {"project": project, "totalRate": totalRate   ,
-               "totalDonate": total_donate, 
-               "report": report,
-               "relatedProjects": relatedProjects,
-               "user_rate": user_rate
-               }
-    return render(request, "project.html", context)
+        context = {"project": project, "totalRate": totalRate   ,
+                "totalDonate": total_donate, 
+                "report": report,
+                "relatedProjects": relatedProjects,
+                "user_rate": user_rate
+                }
+        return render(request, "project.html", context)
+    except:
+        return redirect("/")
 
 @login_required(login_url='login')
 def adddonate(request, id):
@@ -215,7 +218,7 @@ def rate_project(request, id):
             rate = int(request.POST.get('rating'))
             Rate.objects.create(user_id=user_id, project_id=id, body=rate)
     except:
-        rate = Rate.objects.get(user_id= request.user.id)
+        rate = Rate.objects.get(user_id= request.user.id,project_id=id)
         rate.body = int(request.POST.get('rating')) 
         rate.save()
     return redirect('project', id)
