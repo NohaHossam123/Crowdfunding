@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from authenticate.decorators import unauthenticated_user
 from django.contrib import messages
 import datetime
+import re
 
 # Create your views here.
 
@@ -109,13 +110,18 @@ def project(request, id):
 
 @login_required(login_url='login')
 def adddonate(request, id):
-    if request.method.lower() == "post":
-        newdonate = Donate()
-        newdonate.amount = request.POST['amount']
-        newdonate.project = Project.objects.get(id=id)
-        newdonate.user = request.user
-        newdonate.save()
-        return redirect(f'/project/{id}')
+    try:
+        if request.method.lower() == "post":
+            if(re.match("(^[0-9]*(.)?[0-9]+$)",request.POST['amount'])):
+                newdonate = Donate()
+                newdonate.amount = request.POST['amount']
+                newdonate.project = Project.objects.get(id=id)
+                newdonate.user = request.user
+                newdonate.save()
+                return redirect(f'/project/{id}')
+    except:
+        pass
+    return redirect('project', id)
 
 @login_required(login_url='login')
 def addreport(request, id):
