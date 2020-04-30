@@ -1,4 +1,3 @@
-
 <title>New Project</title>
 
 {% block style_block %}
@@ -6,26 +5,25 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
 <link rel="stylesheet" href="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>	
+<script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
 
 {% endblock %}
 
-
 {% block content %}
 {% load widget_tweaks %}
-<div class="container">
+<div class="container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: 30px;margin-bottom: 30px; background-color:whitesmoke;border-radius: 20px;padding-top: 10px;width: 900px">
   <div class="col-md-6">
   <form enctype="multipart/form-data" action="{% url 'create_project' %}" method="post" class=""> {% csrf_token %}
   <!-- {{ form.as_p }} -->
   {% for field in form %}
   <div class="form-group">
-    {{ field.label_tag }}
+    <h3 style="font-size: large">{{ field.label_tag }}</h3>
     {% if field.label == "Tags" %}
       {% for o in field %}
       <div class="custom-control custom-checkbox mb-3">
         {{ field.field }}
-        <input type="checkbox" name="tags" value="{{o.data.value}}" class="custom-control-input" id="{{ o.data.attrs.id }}" > 
-        <label class="custom-control-label" for="{{ o.data.attrs.id }}" >{{o.data.label}}</label> 
+        <input type="checkbox" name="tags" value="{{o.data.value}}" class="custom-control-input" id="{{ o.data.attrs.id }}" >
+        <label class="custom-control-label" for="{{ o.data.attrs.id }}" >{{o.data.label}}</label>
         <br>
       </div>
       {% endfor %}
@@ -52,8 +50,8 @@
       <input type="text" value="" data-role="tagsinput" name="tags" style=></input>
     </div>
 
-  <input type="submit" value="add"  class="btn btn-info pu-6"/>
-  <input type="button" value="Reset" class="btn btn-info pu-6" onClick="this.form.reset()" />
+  <input type="submit" value="add"  class="btn btn-primary pu-6" style="width: 100px; font-weight: bold;font-size: large"/>
+  <input type="button" value="Reset" class="btn btn-danger pu-6" onClick="this.form.reset()" style="width: 100px; font-weight: bold;font-size: large"/>
 
   </form>
 </div>

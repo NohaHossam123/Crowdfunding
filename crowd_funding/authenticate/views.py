@@ -17,18 +17,26 @@ from projects.models import *
 
 # @login_required(login_url='login')
 def home_page(request):
-    # end = Project.objects.filter(end_date=end_date)
+    # project_end_date = Project.objects.all()
+    # end_date = project_end_date[0].end_date
     # now = timezone.now()
-    # end_date = cleaned_date.get("end_date")
     # query = end < now
     latest_projects = Project.objects.order_by("-id")[:5]
-    # if end_date < now :
-    heigest_rate_projects = Rate.objects.order_by("-body")[:5]
+    featured_projects = Project.objects.order_by("-id")[:5]
+    project_end_date = Project.objects.all()
+    end_date = project_end_date[0].end_date
+    now = timezone.now()
+    if end_date < now:
+        heigest_rate_projects = Rate.objects.order_by("-body")[:5]
+        context = {
+            "heighest_rate_projects": heigest_rate_projects,
+        }
     category_result = Category.objects.all()
+    project_picture = ProjectPictures.objects.all()
     context = {
-        "latest_projects": latest_projects,
-        "heighest_rate_projects": heigest_rate_projects,
-        "category_result": category_result
+        "latest_projects":latest_projects,
+        "category_result":category_result,
+        "featured_projects":featured_projects
     }
     return render(request, 'home.html', context)
 
@@ -103,7 +111,12 @@ def account_view(request):
         return redirect('login')
     context = {}
     user_project = Project.objects.filter(user=request.user)
-    donations = Donate.objects.filter(user=request.user)
+    project = Project.objects.get(id=request.user.id)
+    donate = project.donations.only("amount")
+    total_donate = 0
+    for d in donate:
+        total_donate += float(str(d))
+    donations = Project.objects.filter(donations__user=request.user)
     if request.method == 'POST':
         form = AccountUpdateForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
@@ -135,6 +148,7 @@ def account_view(request):
     context['user_project'] = user_project
     context['donations'] = donations
     context['account_form'] = form
+    context['total_donate'] = total_donate
     context['email'] = request.user
     return render(request, 'profile.html', context)
 
@@ -161,9 +175,13 @@ def search(request):
             "title_results":title_results,
             "tag_results":tag_results,
         }
-        return render(request,'home.html', context)
+        return render(request,'search.html', context)
     elif not query:
         messages.error(request, 'no result found')
     else:
-        messages.error(request, 'no result found')
-    return render(request,'home.html')
+        projects = Project.objects.all()
+        context={
+            "projects":projects
+        }
+        return render(request,'search.html', context)
+    return render(request,'search.html')
