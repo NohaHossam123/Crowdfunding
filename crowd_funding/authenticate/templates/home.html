@@ -1,4 +1,7 @@
 {% extends 'navlayout.html' %}
+{% for message in messages %}
+    <div class="alert alert-success">{{ message }}</div>
+{% endfor %}
 {% block content %}
 
 {% endblock %}
