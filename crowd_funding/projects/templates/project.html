@@ -12,8 +12,7 @@
 {% endif %}
 
 {% load mathfilters %}
-<strong>Poject name:</strong>{{project.title}}
-{{totalRate}}
+<strong>Poject name:  </strong>{{project.title}}
 <div class="star-rating">
             {% for i in '54321'%}
             {% if i|add:0 <= totalRate %}
@@ -35,10 +34,26 @@
 {%if totalDonate <= project.total_target|div:4 %}
   <a href="/project/cancel/{{project.id}}" type="submit" class="btn btn-danger">cancel</a>      
 {% endif %}
-
-
-
 <br><br>
+<div class="text-center">
+  <h4 style="margin:0; padding: 0;"><strong>Rate the Project</strong></h4>
+  <div class="star-rating">
+      <form action={% url 'rate_project' project.id %} id="rate_form" method="POST">
+            {% csrf_token %}
+            {% for i in '54321'%}
+            <input id="star-{{i}}" type="radio" name="rating" value="{{i}}"
+            {% if i|add:0 == user_rate %} checked {% endif %}/>
+            <label for="star-{{i}}" title="{{i}} star">
+              <i class="active fa fa-star" aria-hidden="true"></i>
+            </label>
+            {% endfor%}
+            <input id="star-0" type="radio" name="rating" value="0" />
+            <label for="star-0" title="0 star">
+              <i class="active fa fa-star vs" aria-hidden="true"></i>
+            </label>  
+      </form>
+    </div>
+  </div>
 <div class="container">
     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
     <div class="carousel-inner">
@@ -75,25 +90,7 @@
 <div class="container">
 
 <!-- rate project -->
-<div class="text-center">
-  <h4>Rate the Project</h4>
-  <div class="star-rating">
-      <form action={% url 'rate_project' project.id %} id="rate_form" method="POST">
-            {% csrf_token %}
-            {% for i in '54321'%}
-            <input id="star-{{i}}" type="radio" name="rating" value="{{i}}"
-            {% if i|add:0 == user_rate %} checked {% endif %}/>
-            <label for="star-{{i}}" title="{{i}} star">
-              <i class="active fa fa-star" aria-hidden="true"></i>
-            </label>
-            {% endfor%}
-            <input id="star-0" type="radio" name="rating" value="0" />
-            <label for="star-0" title="0 star">
-              <i class="active fa fa-star vs" aria-hidden="true"></i>
-            </label>  
-      </form>
-    </div>
-  </div>
+
 <div class="container-sm">
     <!-- comment -->
   <h5>Comments</h5>
