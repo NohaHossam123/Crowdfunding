@@ -1,29 +1,82 @@
-{% extends 'navlayout.html' %}
-{% block title %} search {% endblock %}
+{% extends 'layout.html'  %}
 {% block content %}
     {% if messages %}
     {% for message in messages %}
-    <div class="alert alert-danger" role="alert">{{ message }}</div>
+        <div class="alert alert-danger" role="alert">{{ message }}</div>
     {% endfor %}
     {% endif %}
     {% if title_results %}
-    {% for project in title_results %}
     <div class="container-fluid" style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap">
         <!-- Card -->
-    {% for rate_project in heighest_rate_projects %}
-    <div class="card" style="width: 280px;height: 380px">
+        {% for tag in tag_results %}
+        {% for tag_project in tag.projects.all %}
+        <div class="card" style="width: 280px;height: 380px; margin:30px">
       <!-- Card image -->
-      <img class="card-img-top" src="https://mdbootstrap.com/img/Photos/Others/images/43.jpg" alt="Card image cap">
+      <img class="card-img-top" src="/static/images/{{ project.images.first}}" alt="No image" width="270" height="200">
     
       <!-- Card content -->
       <div class="card-body">
     
         <!-- Title -->
     
-        <h4 class="card-title"><a>Title: { project.title }}</a></h4>
+        <h4 class="card-title"><a>Title: {{ tag_project.title}}</a></h4>
         <!-- Text -->
         <p class="card-text">
-        <p>Details: {{ project.details }} </p>
+        <p>Details: {{ tag_project.details }}  </p>
+        <a href="/project/{{ project.id}}" class="orange-text d-flex flex-row-reverse p-2">
+            <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i></h5>
+        </a>
+        </p>
+    </div>
+    </div>
+    <!-- Card -->
+    {% endfor %}
+    {% endfor %}
+    </div>
+    {% elif tag_results %}
+    <div class="container-fluid" style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap">
+        <!-- Card -->
+        {% for tags in tag_results %}
+        {% for tag_project in tags.project.all %}
+        <div class="card" style="width: 280px;height: 380px;margin:30px">
+      <!-- Card image -->
+      <img class="card-img-top" src="/static/images/{{ project.images.first}}" alt="No image" width="270" height="200">
+    
+      <!-- Card content -->
+      <div class="card-body">
+    
+        <!-- Title -->
+    
+        <h4 class="card-title"><a>Title: {{ tags.project.title}}</a></h4>
+        <!-- Text -->
+        <p class="card-text">
+        <p>Details: {{ tags.project.details }} </p>
+        <a href="/project/{{ project.id}}" class="orange-text d-flex flex-row-reverse p-2">
+            <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i></h5>
+        </a>
+        </p>
+    </div>
+    </div>
+    {% endfor %}
+    {% endfor %}
+    </div>
+    {% else %}
+    <div class="container-fluid" style="display: flex;flex-direction: row;justify-content: space-between;flex-wrap: wrap">
+        <!-- Card -->
+    {% for project in projects %}
+    <div class="card" style="width: 280px;height: 380px;margin:30px">
+      <!-- Card image -->
+      <img class="card-img-top" src="/static/images/{{ project.images.first}}" alt="No image" width="270" height="200">
+    
+      <!-- Card content -->
+      <div class="card-body">
+    
+        <!-- Title -->
+    
+        <h4 class="card-title"><a>Title: {{ project.title }}</a></h4>
+        <!-- Text -->
+        <p class="card-text">
+        <p>Details: {{ project.title }} </p>
         <a href="/project/{{ project.id}}" class="orange-text d-flex flex-row-reverse p-2">
             <h5 class="waves-effect waves-light">Read more<i class="fas fa-angle-double-right ml-2"></i></h5>
         </a>
