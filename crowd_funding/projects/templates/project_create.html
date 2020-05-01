@@ -4,9 +4,15 @@
 
 
 {% block style_block %}
-Test Tags input
+<!-- Test Tags input -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="http://bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>	
+<link rel="stylesheet" href="{{ STATIC_URL }} /static/project/css/create.css">
 
 {% endblock %}
+
 {% block content %}
 {% load widget_tweaks %}
 <div class="container" style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: 30px;margin-bottom: 30px; background-color:whitesmoke;border-radius: 20px;padding-top: 10px;width: 900px">
@@ -44,8 +50,8 @@ Test Tags input
   </div>
     <div class="form-group">
       <label>Tags: </label>
-      <br>
-      <input type="text" value="" class="" data-role="tagsinput" placeholder="Enter Tags Seperated by commas "></input>
+      <br>      
+      <input type="text" value="" name="tags" data-role="tagsinput" placeholder="Comma Seperated Tags"></input>
     </div>
 
   <input type="submit" value="Add"  class="btn btn-primary pu-6" style="width: 100px; font-weight: bold;font-size: large"/>

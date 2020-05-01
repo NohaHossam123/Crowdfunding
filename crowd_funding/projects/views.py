@@ -34,12 +34,14 @@ def project_create_view(request):
    
     # get tags
     fetched = request.POST.get('tags')
+    print(fetched)
     if fetched is not None:
         new_tags = fetched.split(',')
+        print(new_tags)
         for i in new_tags:
             obj, created = Tag.objects.get_or_create(name=i)
             project.tag_projects_set.create(tag=obj)
-            return redirect('/')
+        return redirect('/')
 
     return render(request, "project_create.html",context)
 

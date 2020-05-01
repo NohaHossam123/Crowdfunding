@@ -166,19 +166,6 @@ def search(request):
     if query:
         title_results = Project.objects.filter(Q(title__icontains=query))
         tag_results = Tag.objects.filter(Q(name__icontains=query))
-<<<<<<< HEAD
-        # tag_projects = Tag_projects.objects.filter(tag_id=tag_results.id)
-        # if not title_results:
-        #     messages.error(request, 'no result found')
-        # elif not tag_results:
-        #     messages.error(request, 'no result found')
-        context={
-            "title_results":title_results,
-            "tag_results":tag_results,
-            # "tag_projects":tag_projects
-        }
-        return render(request,'search.html', context)        
-=======
         context = {
             "title_results": title_results,
             "tag_results": tag_results,
@@ -186,7 +173,6 @@ def search(request):
         return render(request, 'search.html', context)
     elif not query:
         messages.error(request, 'no result found')
->>>>>>> cd99cc016d73813727fc89f01912c58f3a52b2dc
     else:
         projects = Project.objects.all()
         context = {
